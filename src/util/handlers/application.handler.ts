@@ -1,7 +1,8 @@
 import { Sequelize } from "sequelize";
 import { IHandler, Logger, Route } from "../common";
 import { ApiHandler } from "./api.handler";
-import { DatabaseHandler, DbConnection } from "./database.handler";
+import { DatabaseHandler, DatabaseConnection } from "./database.handler";
+import { Food } from "../../model/food.model";
 
 export class ApplicationHandler implements IHandler {
     private api?: ApiHandler;
@@ -22,7 +23,7 @@ export class ApplicationHandler implements IHandler {
     public async initialize(logger: Logger, routes: Route[]): Promise<boolean> {
         this.api = new ApiHandler();
         this.db = new DatabaseHandler(
-            <Sequelize> new DbConnection('postgres')
+            <Sequelize> new DatabaseConnection('postgres')
             .addUsername(process.env.DB_USERNAME || 'postgres')
             .addPassword(process.env.DB_PASSWORD || 'password')
             .addHost(process.env.DB_HOST || 'localhost')
@@ -39,7 +40,14 @@ export class ApplicationHandler implements IHandler {
         );
 
         let flags = [
-            await this.db.initialize(logger, { force: true }), 
+            await this.db.initialize(
+                logger, 
+                [
+                    // models
+                    Food
+                ], 
+                { force: true }
+            ), 
             this.api.initialize(
                 logger, 
                 routes

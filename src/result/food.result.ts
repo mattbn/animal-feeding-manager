@@ -24,7 +24,7 @@ export class DestroyedFoodResult extends BaseResult {
     }
 }
 
-export class FoodNotFoundError extends BaseResult {
+export class FoodNotFoundErrorResult extends BaseResult {
     public constructor() {
         super(ResultType.FoodNotFound, 'no food was found');
     }
