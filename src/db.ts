@@ -54,10 +54,21 @@ export class DbConnection {
 }
 
 export function initModels(sequelize: Sequelize): void {
+    Object.values(sequelize.models)
+    .map((m: any) => {
+        m.prototype.associate();
+        return m;
+    })
+    .forEach((m: any) => m.init(
+        m.prototype.getModelAttributes(), 
+        m.prototype.getModelInitOptions(sequelize)
+    ));
 }
 
-export function initAssociations(): void {
-}
-
-export async function syncModels(options?: SyncOptions): Promise<void> {
+export async function syncModels(
+    sequelize: Sequelize, 
+    options?: SyncOptions
+): Promise<void> {
+    Object.values(sequelize.models)
+    .forEach(async (m: any) => await m.sync(options));
 }

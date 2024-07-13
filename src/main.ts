@@ -23,8 +23,13 @@ import * as db from "./db";
 
     // init models
     db.initModels(<Sequelize> connection);
-    db.initAssociations();
-    await db.syncModels({ force: true });
+    try {
+        await db.syncModels(<Sequelize> connection, { force: true });
+    }
+    catch(err) {
+        console.log(err);
+        return;
+    }
 
     // init api
     api.init(Number.parseInt(process.env.API_PORT || '8000'), console.log);
