@@ -1,3 +1,4 @@
+import { CreatedFoodResult, DestroyedFoodResult, ReadFoodResult, UpdatedFoodResult } from "../../result/food.result";
 import { IFactory } from "../common";
 import { InvalidInputErrorResult, IResult, ResultType, UnauthenticatedErrorResult, UnauthorizedErrorResult, UnknownErrorResult } from "../result";
 
@@ -7,6 +8,11 @@ export class ResultFactory implements IFactory<ResultType, IResult> {
         [ResultType.InvalidInput, InvalidInputErrorResult], 
         [ResultType.Unauthenticated, UnauthenticatedErrorResult], 
         [ResultType.Unauthorized, UnauthorizedErrorResult], 
+
+        [ResultType.CreatedFood, CreatedFoodResult], 
+        [ResultType.ReadFood, ReadFoodResult], 
+        [ResultType.UpdatedFood, UpdatedFoodResult], 
+        [ResultType.DestroyedFood, DestroyedFoodResult], 
     ]);
 
     public generate(type: ResultType): IResult {

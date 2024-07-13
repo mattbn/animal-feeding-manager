@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { IResult } from "./result";
+import { InitOptions, Model, ModelAttributes, Sequelize } from "sequelize";
 
 export type Awaitable<T> = T | Promise<T>;
 
@@ -17,6 +18,12 @@ export type Route = {
 
 export interface IFactory<SelectorT, OutputT> {
     generate(type: SelectorT): OutputT;
+}
+
+export abstract class BaseModel extends Model {
+    public abstract getModelAttributes(): ModelAttributes<Model>;
+    public abstract getModelInitOptions(sequelize: Sequelize): InitOptions;
+    public abstract associate(): void;
 }
 
 declare global {

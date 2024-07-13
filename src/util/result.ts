@@ -5,6 +5,12 @@ export enum ResultType {
     InvalidInput, 
     Unauthenticated, 
     Unauthorized, 
+
+    CreatedFood, 
+    ReadFood, 
+    UpdatedFood,
+    DestroyedFood, 
+    FoodNotFound, 
 }
 
 export interface IResult {
@@ -76,7 +82,16 @@ export class UnauthorizedErrorResult extends BaseResult {
 // decorator
 export class HttpResultDecorator extends BaseResult {
     private static map: Map<ResultType, StatusCodes> = new Map([
+        [ResultType.Unknown, StatusCodes.INTERNAL_SERVER_ERROR], 
+        [ResultType.InvalidInput, StatusCodes.BAD_REQUEST], 
+        [ResultType.Unauthenticated, StatusCodes.UNAUTHORIZED], 
+        [ResultType.Unauthorized, StatusCodes.FORBIDDEN], 
 
+        [ResultType.CreatedFood, StatusCodes.CREATED], 
+        [ResultType.ReadFood, StatusCodes.OK], 
+        [ResultType.UpdatedFood, StatusCodes.OK], 
+        [ResultType.DestroyedFood, StatusCodes.OK], 
+        [ResultType.FoodNotFound, StatusCodes.NOT_FOUND], 
     ]);
     private code: StatusCodes;
 
