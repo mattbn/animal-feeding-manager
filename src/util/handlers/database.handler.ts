@@ -81,13 +81,13 @@ export class DatabaseHandler implements IHandler {
         let result = true;
         Object.values(this.connection.models)
         .map((m: any) => {
-            m.associate();
+            m.prototype.associate();
             return m;
         })
         .map((m: any) => {
             m.init(
-                m.getModelAttributes(), 
-                m.getModelInitOptions(this.connection)
+                m.prototype.getModelAttributes(), 
+                m.prototype.getModelInitOptions(this.connection)
             );
             return m;
         })
