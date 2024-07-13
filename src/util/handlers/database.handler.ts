@@ -1,4 +1,5 @@
 import { Model, ModelOptions, Options, Sequelize, SyncOptions, Dialect } from "sequelize";
+import { IHandler, Logger } from "../common";
 
 export class DbConnection {
     private connection?: Sequelize;
@@ -53,6 +54,58 @@ export class DbConnection {
     }
 }
 
+export class DatabaseHandler implements IHandler {
+    private connection: Sequelize;
+    private initialized: boolean;
+
+    public constructor(connection: Sequelize) {
+        this.connection = connection;
+        this.initialized = false;
+    }
+
+    public getConnection(): Sequelize {
+        return this.connection;
+    }
+
+    public isInitialized(): boolean {
+        return this.initialized;
+    }
+
+    public async initialize(
+        logger: Logger, 
+        options?: SyncOptions
+    ): Promise<boolean> {
+        if(this.initialized) {
+            return false;
+        }
+        let result = true;
+        Object.values(this.connection.models)
+        .map((m: any) => {
+            m.associate();
+            return m;
+        })
+        .map((m: any) => {
+            m.init(
+                m.getModelAttributes(), 
+                m.getModelInitOptions(this.connection)
+            );
+            return m;
+        })
+        .forEach(async (m: any) => {
+            try {
+                await m.sync(options)
+            }
+            catch(err: any) {
+                logger(err);
+                result = false;
+            }
+        });
+        this.initialized = result;
+        return result;
+    }
+}
+
+/*
 export function initModels(sequelize: Sequelize): void {
     Object.values(sequelize.models)
     .map((m: any) => {
@@ -72,3 +125,4 @@ export async function syncModels(
     Object.values(sequelize.models)
     .forEach(async (m: any) => await m.sync(options));
 }
+*/

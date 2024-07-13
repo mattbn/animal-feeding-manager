@@ -2,7 +2,7 @@
   "name": "animal-feeding-manager",
   "version": "1.0.0",
   "description": "Animal food orders management system",
-  "main": "out/main.js",
+  "main": "out/api.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

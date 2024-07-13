@@ -1,17 +1,10 @@
-import express from "express";
-import routes, { Route } from "./routes";
+import dotenv from "dotenv";
+import { ApplicationHandler } from "./util/handlers/application.handler";
+dotenv.config();
 
-export function init(port: number, logger: Function) {
-    logger('Initializing API...');
-    let app = express();
-
-    logger('Initializing routes...');
-    routes.forEach((route: Route) => {
-        logger(`> Initializing /${route.name}...`);
-        app.use(`/${route.name}`, route.router);
-    });
-
-    app.listen(port, () => {
-        logger(`Listening on port ${port}.`);
-    });
-}
+(async () => {
+    let app = new ApplicationHandler();
+    await app.initialize(console.log, [
+    ]);
+    app.run(Number.parseInt(process.env.API_PORT || '8000'));
+})();
