@@ -1,13 +1,32 @@
-import { CreationOptional, DataTypes, InitOptions, Model, ModelAttributes, Sequelize } from "sequelize";
+import { Association, BelongsToManyAddAssociationMixin, BelongsToManyAddAssociationsMixin, BelongsToManyCountAssociationsMixin, BelongsToManyCreateAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManyHasAssociationMixin, BelongsToManyHasAssociationsMixin, BelongsToManyRemoveAssociationMixin, BelongsToManyRemoveAssociationsMixin, BelongsToManySetAssociationsMixin, CreationOptional, DataTypes, InitOptions, Model, ModelAttributes, NonAttribute, Sequelize } from "sequelize";
 import { BaseModel } from "../util/common";
+import { Order } from "./order.model";
+import { OrderFood } from "./orderfood.model";
 
 export class Food extends BaseModel {
     declare id: CreationOptional<bigint>;
     declare name: string;
     declare quantity: CreationOptional<number>;
 
-    public associate() {
+    declare getOrderFoods: BelongsToManyGetAssociationsMixin<OrderFood>;
+    declare addOrderFood: BelongsToManyAddAssociationMixin<OrderFood, bigint>;
+    declare addOrderFoods: BelongsToManyAddAssociationsMixin<OrderFood, bigint>;
+    declare setOrderFoods: BelongsToManySetAssociationsMixin<OrderFood, bigint>;
+    declare removeOrderFood: BelongsToManyRemoveAssociationMixin<OrderFood, bigint>;
+    declare removeOrderFoods: BelongsToManyRemoveAssociationsMixin<OrderFood, bigint>;
+    declare hasOrderFood: BelongsToManyHasAssociationMixin<OrderFood, bigint>;
+    declare hasOrderFoods: BelongsToManyHasAssociationsMixin<OrderFood, bigint>;
+    declare countOrderFoods: BelongsToManyCountAssociationsMixin;
+    declare createOrderFoods: BelongsToManyCreateAssociationMixin<OrderFood>;
 
+    /*
+    declare static associations: {
+        orders: Association<Food, Order>, 
+    };
+    */
+
+    public associate() {
+        Food.belongsToMany(Order, { through: OrderFood });
     }
 
     public getModelAttributes(): ModelAttributes<Model> {
@@ -35,7 +54,7 @@ export class Food extends BaseModel {
                 allowNull: false, 
                 defaultValue: 0, 
                 validate: {
-                    isFloat: true, 
+                    min: 0, 
                 }
             }, 
         };
@@ -50,7 +69,8 @@ export class Food extends BaseModel {
                 attributes: {
                     exclude: ['deleted_at'], 
                 }
-            }
+            }, 
+            modelName: 'Food', 
         };
     }
 }

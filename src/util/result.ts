@@ -11,6 +11,12 @@ export enum ResultType {
     UpdatedFood,
     DestroyedFood, 
     FoodNotFound, 
+
+    CreatedOrder, 
+    ReadOrder, 
+    UpdatedOrder, 
+    DestroyedOrder, 
+    OrderNotFound, 
 }
 
 export interface IResult {
@@ -92,6 +98,12 @@ export class HttpResultDecorator extends BaseResult {
         [ResultType.UpdatedFood, StatusCodes.OK], 
         [ResultType.DestroyedFood, StatusCodes.OK], 
         [ResultType.FoodNotFound, StatusCodes.NOT_FOUND], 
+
+        [ResultType.CreatedOrder, StatusCodes.CREATED], 
+        [ResultType.ReadOrder, StatusCodes.OK], 
+        [ResultType.UpdatedOrder, StatusCodes.OK], 
+        [ResultType.DestroyedOrder, StatusCodes.OK], 
+        [ResultType.OrderNotFound, StatusCodes.NOT_FOUND], 
     ]);
     private code: StatusCodes;
 

@@ -26,6 +26,17 @@ export abstract class BaseModel extends Model {
     public abstract associate(): void;
 }
 
+export type ModelProperties<M extends BaseModel> = Omit<M, keyof BaseModel>;
+
+export function applyEnumFunction(
+    enumType: any, 
+    fn: (x: number, y: number) => number
+) {
+    return Object.values(enumType)
+    .filter((x: any) => typeof(x) === 'number')
+    .reduce(fn);
+}
+
 declare global {
     namespace Express {
         export interface Request {
