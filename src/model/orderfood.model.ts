@@ -1,7 +1,5 @@
 import { ModelAttributes, Model, DataTypes, InitOptions, Sequelize } from "sequelize";
 import { BaseModel } from "../util/common";
-import { Order } from "./order.model";
-import { Food } from "./food.model";
 
 export class OrderFood extends BaseModel {
     declare quantity: number;
@@ -11,22 +9,6 @@ export class OrderFood extends BaseModel {
 
     public getModelAttributes(): ModelAttributes<Model> {
         return {
-            orderId: {
-                type: DataTypes.BIGINT, 
-                allowNull: false, 
-                references: {
-                    key: 'id', 
-                    model: Order
-                }
-            }, 
-            foodId: {
-                type: DataTypes.BIGINT, 
-                allowNull: false, 
-                references: {
-                    key: 'id', 
-                    model: Food, 
-                }
-            }, 
             quantity: {
                 type: DataTypes.REAL, 
                 allowNull: false, 
@@ -46,7 +28,7 @@ export class OrderFood extends BaseModel {
             sequelize: sequelize, 
             paranoid: true, 
             deletedAt: 'deleted_at', 
-            modelName: 'OrderFood', 
+            modelName: 'OrderFoods', 
         }
     }
 }

@@ -19,6 +19,7 @@ dotenv.config();
                 .use(json())
                 .get('/', filterRequest(ReadFoodRequest), FoodController.read)
                 .post('/', filterRequest(CreateFoodRequest), FoodController.create)
+                .put('/', filterRequest(UpdateFoodRequest), FoodController.update)
                 .get('/:id', filterRequest(ReadFoodRequest), FoodController.read)
                 .put('/:id', filterRequest(UpdateFoodRequest), FoodController.update)
                 .delete('/:id', filterRequest(DestroyFoodRequest), FoodController.destroy)

@@ -1,4 +1,4 @@
-import { Association, BelongsToManyAddAssociationMixin, BelongsToManyAddAssociationsMixin, BelongsToManyCountAssociationsMixin, BelongsToManyCreateAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManyHasAssociationMixin, BelongsToManyHasAssociationsMixin, BelongsToManyRemoveAssociationMixin, BelongsToManyRemoveAssociationsMixin, BelongsToManySetAssociationsMixin, CreationOptional, DataTypes, InitOptions, Model, ModelAttributes, NonAttribute, Sequelize } from "sequelize";
+import { BelongsToManyAddAssociationMixin, BelongsToManyAddAssociationsMixin, BelongsToManyCountAssociationsMixin, BelongsToManyCreateAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManyHasAssociationMixin, BelongsToManyHasAssociationsMixin, BelongsToManyRemoveAssociationMixin, BelongsToManyRemoveAssociationsMixin, BelongsToManySetAssociationsMixin, CreationOptional, DataTypes, InitOptions, Model, ModelAttributes, NonAttribute, Sequelize } from "sequelize";
 import { BaseModel } from "../util/common";
 import { Order } from "./order.model";
 import { OrderFood } from "./orderfood.model";
@@ -18,12 +18,6 @@ export class Food extends BaseModel {
     declare hasOrderFoods: BelongsToManyHasAssociationsMixin<OrderFood, bigint>;
     declare countOrderFoods: BelongsToManyCountAssociationsMixin;
     declare createOrderFoods: BelongsToManyCreateAssociationMixin<OrderFood>;
-
-    /*
-    declare static associations: {
-        orders: Association<Food, Order>, 
-    };
-    */
 
     public associate() {
         Food.belongsToMany(Order, { through: OrderFood });
@@ -63,14 +57,8 @@ export class Food extends BaseModel {
     public getModelInitOptions(sequelize: Sequelize): InitOptions {
         return {
             sequelize: sequelize, 
-            paranoid: true, 
-            deletedAt: 'deleted_at', 
-            defaultScope: {
-                attributes: {
-                    exclude: ['deleted_at'], 
-                }
-            }, 
-            modelName: 'Food', 
+            modelName: 'Foods', 
+            paranoid: false, 
         };
     }
 }

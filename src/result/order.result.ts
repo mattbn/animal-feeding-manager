@@ -29,3 +29,15 @@ export class OrderNotFoundErrorResult extends BaseResult {
         super(ResultType.OrderNotFound, 'no order was found');
     }
 }
+
+export class NotEnoughFoodErrorResult extends BaseResult {
+    public constructor() {
+        super(ResultType.NotEnoughFood, 'not enough food');
+    }
+}
+
+export class SomeFoodsNotFoundErrorResult extends BaseResult {
+    public constructor() {
+        super(ResultType.SomeFoodsNotFound, 'one or more foods were not found');
+    }
+}

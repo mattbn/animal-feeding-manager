@@ -3,6 +3,8 @@ import { IHandler, Logger, Route } from "../common";
 import { ApiHandler } from "./api.handler";
 import { DatabaseHandler, DatabaseConnection } from "./database.handler";
 import { Food } from "../../model/food.model";
+import { Order } from "../../model/order.model";
+import { OrderFood } from "../../model/orderfood.model";
 
 export class ApplicationHandler implements IHandler {
     private api?: ApiHandler;
@@ -44,7 +46,9 @@ export class ApplicationHandler implements IHandler {
                 logger, 
                 [
                     // models
-                    Food
+                    Food, 
+                    Order, 
+                    OrderFood, 
                 ], 
                 { force: true }
             ), 

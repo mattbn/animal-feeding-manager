@@ -80,50 +80,16 @@ export class DatabaseHandler implements IHandler {
             return false;
         }
         let result = true;
-        Object.values(models)
-        .map((m: any) => {
-            m.prototype.associate();
-            return m;
-        })
-        .map((m: any) => {
-            m.init(
-                m.prototype.getModelAttributes(), 
-                m.prototype.getModelInitOptions(this.connection)
-            );
-            return m;
-        })
-        .forEach(async (m: any) => {
-            try {
-                await m.sync(options)
-            }
-            catch(err: any) {
-                logger(err);
-                result = false;
-            }
-        });
+        Object.values(models).forEach((m: any) => m.init(
+            m.prototype.getModelAttributes(), 
+            m.prototype.getModelInitOptions(this.connection)
+        ));
+        Object.values(models).forEach((m: any) => m.prototype.associate());
+        for(let m of models) {
+            try { await m.sync(options); }
+            catch(err: any) { logger(err); result = false; }
+        }
         this.initialized = result;
         return result;
     }
 }
-
-/*
-export function initModels(sequelize: Sequelize): void {
-    Object.values(sequelize.models)
-    .map((m: any) => {
-        m.prototype.associate();
-        return m;
-    })
-    .forEach((m: any) => m.init(
-        m.prototype.getModelAttributes(), 
-        m.prototype.getModelInitOptions(sequelize)
-    ));
-}
-
-export async function syncModels(
-    sequelize: Sequelize, 
-    options?: SyncOptions
-): Promise<void> {
-    Object.values(sequelize.models)
-    .forEach(async (m: any) => await m.sync(options));
-}
-*/

@@ -35,8 +35,14 @@ export function validateQuery(req: Request, res: Response, next: NextFunction) {
         .split(',')
         .map((x: string) => BigInt(x));
     }
-    req.params.created_at = created_at;
-    req.params.updated_at = updated_at;
-    req.params.foods = foods;
+    if(created_at !== undefined) {
+        req.params.created_at = created_at;
+    }
+    if(updated_at !== undefined) {
+        req.params.updated_at = updated_at;
+    }
+    if(foods !== undefined) {
+        req.params.foods = foods;
+    }
     next();
 }

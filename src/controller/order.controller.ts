@@ -2,9 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { ResultType } from "../util/result";
 import { Order } from "../model/order.model";
 import { Food } from "../model/food.model";
-import { ModelProperties } from "../util/common";
 import { Op } from "sequelize";
-import { OrderFood } from "../model/orderfood.model";
 import { resultFactory } from "../util/factory/result.factory";
 
 export class OrderController {
@@ -17,8 +15,12 @@ export class OrderController {
             if(foods === undefined 
                 || foods instanceof Array === false 
                 || foods.length === 0
+            ) {
+                next(ResultType.InvalidInput);
+            }
+            else {
                 // check if there's enough food quantity available and all specified foods exist
-                || await (async (n: number) => {
+                let result = await (async () => {
                     let results = (await Food.findAll({
                         where: {
                             id: {
@@ -26,22 +28,31 @@ export class OrderController {
                             }
                         }
                     }));
-                    return results.length === foods.length
-                    && results.every((x: Food, idx: number) => x.quantity >= foods.at(idx)!.quantity);
-                })(foods.length)
-            ) {
-                next(ResultType.InvalidInput);
+                    return [
+                        results.length !== foods.length, 
+                        results.some((x: Food, idx: number) => x.quantity < foods.at(idx)!.quantity)
+                    ];
+                })();
+                if(result[0]) {
+                    next(ResultType.SomeFoodsNotFound);
+                }
+                else if(result[1]) {
+                    next(ResultType.NotEnoughFood);
+                }
+                else {
+                    let order = await Order.create(req.body);
+                    for(let food of foods) {
+                        await order.addFood(food.id, { through: { quantity: food.quantity }});
+                    }
+                    req.result = resultFactory
+                    .generate(ResultType.CreatedOrder)
+                    .setData(order);
+                    next();
+                }
             }
-
-            req.body.foods = { OrderFood: req.body.foods };
-            let order = await Order.create(req.body, { include: Food });
-            req.result = resultFactory
-            .generate(ResultType.CreatedOrder)
-            .setData(order);
-            next();
         }
         catch(err) {
-            next(ResultType.InvalidInput);
+            next(ResultType.Unknown);
         }
     }
 
@@ -49,7 +60,11 @@ export class OrderController {
         // use query parameters
         let orders = await Order.findAll({ where: req.params, include: {
             model: Food, 
-            attributes: ['name']
+            attributes: ['name'], 
+            through: {
+                attributes: ['quantity'], 
+                as: 'details', 
+            }
         }});
         if(orders && orders.length !== 0) {
             req.result = resultFactory

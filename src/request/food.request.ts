@@ -27,6 +27,7 @@ export class UpdateFoodRequest extends BaseRequest {
         }, {
             name: body.name, 
             quantity: body.quantity, 
+            foods: body.foods, 
         });
     }
 }

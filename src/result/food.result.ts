@@ -29,3 +29,9 @@ export class FoodNotFoundErrorResult extends BaseResult {
         super(ResultType.FoodNotFound, 'no food was found');
     }
 }
+
+export class FoodAlreadyCreatedErrorResult extends BaseResult {
+    public constructor() {
+        super(ResultType.FoodAlreadyCreated, 'food already present');
+    }
+}

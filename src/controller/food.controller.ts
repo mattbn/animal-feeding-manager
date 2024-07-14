@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import { Food } from "../model/food.model";
 import { resultFactory } from "../util/factory/result.factory";
 import { ResultType } from "../util/result";
+import { UniqueConstraintError } from "sequelize";
+import { filterEntries } from "../util/common";
 
 export class FoodController {
     public static async create(req: Request, res: Response, next: NextFunction) {
@@ -13,6 +15,9 @@ export class FoodController {
             next();
         }
         catch(err) {
+            if(err instanceof UniqueConstraintError) {
+                next(ResultType.FoodAlreadyCreated);
+            }
             next(ResultType.InvalidInput);
         }
     }
@@ -31,14 +36,27 @@ export class FoodController {
     }
 
     public static async update(req: Request, res: Response, next: NextFunction) {
-        let rows = await Food.update(req.body, { where: req.params });
-        if(rows[0] !== 0) {
+        if(req.body.foods) {
+            for(let food of req.body.foods) {
+                await Food.update(
+                    filterEntries(food, (x: [string, any]) => x[0] !== 'id'), 
+                    { where: filterEntries(food, (x: [string, any]) => x[0] === 'id') }
+                ); 
+            }
             req.result = resultFactory
             .generate(ResultType.UpdatedFood);
             next();
         }
         else {
-            next(ResultType.FoodNotFound);
+            let rows = await Food.update(req.body, { where: req.params });
+            if(rows[0] !== 0) {
+                req.result = resultFactory
+                .generate(ResultType.UpdatedFood);
+                next();
+            }
+            else {
+                next(ResultType.FoodNotFound);
+            }
         }
     }
 

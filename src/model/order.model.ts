@@ -1,4 +1,4 @@
-import { Association, BelongsToManyAddAssociationMixin, BelongsToManyAddAssociationsMixin, BelongsToManyCountAssociationsMixin, BelongsToManyCreateAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManyHasAssociationMixin, BelongsToManyHasAssociationsMixin, BelongsToManyRemoveAssociationMixin, BelongsToManyRemoveAssociationsMixin, BelongsToManySetAssociationsMixin, CreationOptional, DataTypes, InitOptions, Model, ModelAttributes, NonAttribute, Sequelize } from "sequelize";
+import { BelongsToManyAddAssociationMixin, BelongsToManyAddAssociationsMixin, BelongsToManyCountAssociationsMixin, BelongsToManyCreateAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManyHasAssociationMixin, BelongsToManyHasAssociationsMixin, BelongsToManyRemoveAssociationMixin, BelongsToManyRemoveAssociationsMixin, BelongsToManySetAssociationsMixin, CreationOptional, DataTypes, InitOptions, Model, ModelAttributes, NonAttribute, Sequelize } from "sequelize";
 import { applyEnumFunction, BaseModel } from "../util/common";
 import { Food } from "./food.model";
 import { OrderFood } from "./orderfood.model";
@@ -27,12 +27,6 @@ export class Order extends BaseModel {
     declare countFoods: BelongsToManyCountAssociationsMixin;
     declare createFoods: BelongsToManyCreateAssociationMixin<Food>;
 
-    /*
-    declare static associations: {
-        foods: Association<Order, Food>, 
-    };
-    */
-
     public associate(): void {
         Order.belongsToMany(Food, { through: OrderFood });
     }
@@ -48,7 +42,7 @@ export class Order extends BaseModel {
                 type: DataTypes.STRING, 
                 allowNull: false, 
                 validate: {
-                    isAlpha: true, 
+                    isAlphanumeric: true, 
                 }
             }, 
             status: {
@@ -73,7 +67,7 @@ export class Order extends BaseModel {
             sequelize: sequelize, 
             paranoid: true, 
             deletedAt: 'deleted_at', 
-            modelName: 'Order', 
+            modelName: 'Orders', 
         }
     }
 }

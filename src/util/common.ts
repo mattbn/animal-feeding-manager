@@ -34,7 +34,14 @@ export function applyEnumFunction(
 ) {
     return Object.values(enumType)
     .filter((x: any) => typeof(x) === 'number')
-    .reduce(fn);
+    .reduce((x: number, y: number) => fn(x, y));
+}
+
+export function filterEntries(obj: any, filter: (x: [string, any]) => boolean) {
+    return Object.fromEntries(
+        Object.entries(obj)
+        .filter(filter)
+    );
 }
 
 declare global {
