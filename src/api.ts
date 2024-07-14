@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import { ApplicationHandler } from "./util/handlers/application.handler";
-import { json, Router } from "express";
+import { json, Request, Response, Router } from "express";
 import { result } from "./middleware/result.middleware";
 import { FoodController } from "./controller/food.controller";
 import { OrderController } from "./controller/order.controller";
@@ -8,6 +8,7 @@ import { validateQuery } from "./middleware/order.middleware";
 import { CreateFoodRequest, DestroyFoodRequest, ReadFoodRequest, UpdateFoodRequest } from "./request/food.request";
 import { filterRequest } from "./middleware/request.middleware";
 import { CreateOrderRequest, DestroyOrderRequest, ReadOrderRequest, UpdateOrderRequest } from "./request/order.request";
+import { StatusCodes } from "http-status-codes";
 dotenv.config();
 
 (async () => {
@@ -35,7 +36,14 @@ dotenv.config();
                 .put('/:id', filterRequest(UpdateOrderRequest), OrderController.update)
                 .delete('/:id', filterRequest(DestroyOrderRequest), OrderController.destroy)
                 .use(result(console.log))
-        }
+        }, 
+        {
+            name: '', 
+            router: Router()
+                .get('*', (req: Request, res: Response) => {
+                    res.sendStatus(StatusCodes.IM_A_TEAPOT);
+                })
+        }, 
     ]);
     app.run(Number.parseInt(process.env.API_PORT || '8000'));
 })();
