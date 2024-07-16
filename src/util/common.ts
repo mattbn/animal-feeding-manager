@@ -7,7 +7,7 @@ export type Awaitable<T> = T | Promise<T>;
 export type Logger = (msg: any) => Awaitable<void>;
 
 export interface IHandler {
-    initialize(logger: Logger, ...args: any[]): Awaitable<boolean>;
+    initialize(...args: any[]): Awaitable<IHandler>;
     isInitialized(): boolean;
 }
 

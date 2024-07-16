@@ -20,9 +20,9 @@ export class ApiHandler implements IHandler {
         return this.server;
     }
 
-    public initialize(logger: Logger, routes: Route[]): boolean {
+    public initialize(logger: Logger, routes: Route[]): ApiHandler {
         if(this.initialized) {
-            return false;
+            return this;
         }
         let result = true;
         this.logger = logger;
@@ -35,15 +35,20 @@ export class ApiHandler implements IHandler {
             this.app!.use(`/${route.name}`, route.router);
         });
         this.initialized = result;
-        return result;
+        return this;
     }
 
-    public run(port: Number): void | never {
+    public run(port: Number): ApiHandler | never {
         if(!this.initialized) {
             throw new Error('API is not initialized');
         }
         this.server = this.app!.listen(port, () => {
             this.logger!(`Listening on port ${port}.`);
         });
+        return this;
+    }
+
+    public getApp(): Express | undefined {
+        return this.app;
     }
 }

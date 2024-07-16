@@ -9,8 +9,8 @@ export class DatabaseConnection {
         this.options = { dialect: dialect };
     }
 
-    private addProperty(property: string, value: any): DatabaseConnection {
-        this.options[<keyof Options> property] = value;
+    public addProperty(property: keyof Options, value: any): DatabaseConnection {
+        this.options[property] = value;
         return this;
     }
 
@@ -55,41 +55,42 @@ export class DatabaseConnection {
 }
 
 export class DatabaseHandler implements IHandler {
-    private connection: Sequelize;
-    private initialized: boolean;
+    private connection?: Sequelize;
 
-    public constructor(connection: Sequelize) {
-        this.connection = connection;
-        this.initialized = false;
-    }
-
-    public getConnection(): Sequelize {
+    public getConnection(): Sequelize | undefined {
         return this.connection;
     }
 
     public isInitialized(): boolean {
-        return this.initialized;
+        return this.connection !== undefined;
     }
 
-    public async initialize(
+    public initialize(connection?: Sequelize): DatabaseHandler {
+        this.connection = connection;
+        return this;
+    }
+
+    public async initializeModels(
         logger: Logger, 
         models: typeof BaseModel[], 
         options?: SyncOptions
-    ): Promise<boolean> {
-        if(this.initialized) {
-            return false;
+    ): Promise<{ handler: DatabaseHandler, result: boolean }> {
+        let result = false;
+        if(this.isInitialized()) {
+            result = true;
+            Object.values(models).forEach((m: any) => m.init(
+                m.prototype.getModelAttributes(), 
+                m.prototype.getModelInitOptions(this.connection)
+            ));
+            Object.values(models).forEach((m: any) => m.prototype.associate());
+            for(let m of models) {
+                try { await m.sync(options); }
+                catch(err: any) { logger(err); result = false; }
+            }
         }
-        let result = true;
-        Object.values(models).forEach((m: any) => m.init(
-            m.prototype.getModelAttributes(), 
-            m.prototype.getModelInitOptions(this.connection)
-        ));
-        Object.values(models).forEach((m: any) => m.prototype.associate());
-        for(let m of models) {
-            try { await m.sync(options); }
-            catch(err: any) { logger(err); result = false; }
-        }
-        this.initialized = result;
-        return result;
+        return {
+            handler: this, 
+            result: result, 
+        };
     }
 }

@@ -4,7 +4,7 @@
   "description": "Animal food orders management system",
   "main": "out/api.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "newman run animal-feeding-manager.postman_collection.json > test.result.log"
   },
   "repository": {
     "type": "git",
