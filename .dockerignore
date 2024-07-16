@@ -1,0 +1,8 @@
+node_modules
+src
+.gitignore
+*.ts
+Dockerfile
+docker-compose.yaml
+*.postman_collection.json
+tsconfig.json
