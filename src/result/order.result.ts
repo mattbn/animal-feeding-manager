@@ -18,12 +18,6 @@ export class UpdatedOrderResult extends BaseResult {
     }
 }
 
-export class DestroyedOrderResult extends BaseResult {
-    public constructor() {
-        super(ResultType.DestroyedOrder, 'order destroyed successfully');
-    }
-}
-
 export class OrderNotFoundErrorResult extends BaseResult {
     public constructor() {
         super(ResultType.OrderNotFound, 'no order was found');
@@ -39,5 +33,11 @@ export class NotEnoughFoodErrorResult extends BaseResult {
 export class SomeFoodsNotFoundErrorResult extends BaseResult {
     public constructor() {
         super(ResultType.SomeFoodsNotFound, 'one or more foods were not found');
+    }
+}
+
+export class InactiveOrderErrorResult extends BaseResult {
+    public constructor() {
+        super(ResultType.InactiveOrder, 'order is completed or failed');
     }
 }

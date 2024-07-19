@@ -1,6 +1,51 @@
 import { NextFunction, Request, Response } from "express";
 import { Op } from "sequelize";
+import { Order, OrderStatus } from "../model/order.model";
+import { ResultType } from "../util/result";
 
+export function adaptQueryDateRanges(paramName: string, beginName: string, endName: string) {
+    return function(req: Request, res: Response, next: NextFunction) {
+        let obj: any;
+        if(req.query[beginName] !== undefined && req.query[endName] !== undefined) {
+            obj = {
+                [Op.gt]: new Date(req.query[beginName] as string), 
+                [Op.lt]: new Date(req.query[endName] as string), 
+            };
+        }
+        else if(req.query[beginName] !== undefined) {
+            obj = { [Op.gt]: new Date(req.query[beginName] as string) };
+        }
+        else if(req.query[endName] !== undefined) {
+            obj = { [Op.lt]: new Date(req.query[endName] as string) };
+        }
+        if(obj !== undefined) {
+            req.params[paramName] = obj;
+        }
+        next();
+    }
+}
+
+export function adaptObjectList(
+    paramName: string, 
+    queryName: string, 
+    mapFn: (x: any) => any
+) {
+    return function(req: Request, res: Response, next: NextFunction) {
+        let obj: any;
+        if(req.query[queryName] !== undefined) {
+            obj = req.query[queryName]
+            .toString()
+            .split(',')
+            .map(mapFn);
+        }
+        if(obj !== undefined) {
+            req.params[paramName] = obj;
+        }
+        next();
+    }
+}
+
+/*
 export function validateQuery(req: Request, res: Response, next: NextFunction) {
     let created_at: any;
     let updated_at: any;
@@ -45,4 +90,15 @@ export function validateQuery(req: Request, res: Response, next: NextFunction) {
         req.params.foods = foods;
     }
     next();
+}
+*/
+
+export function isOrderActive(req: Request, res: Response, next: NextFunction) {
+    let invalidStatuses = [OrderStatus.Completed, OrderStatus.Failed];
+    if(!req.result || invalidStatuses.includes(req.result.getData().status)) {
+        next(ResultType.InactiveOrder);
+    }
+    else {
+        next();
+    }
 }

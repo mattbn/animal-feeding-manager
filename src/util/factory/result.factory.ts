@@ -1,5 +1,5 @@
-import { CreatedFoodResult, DestroyedFoodResult, FoodAlreadyCreatedErrorResult, FoodNotFoundErrorResult, ReadFoodResult, UpdatedFoodResult } from "../../result/food.result";
-import { CreatedOrderResult, DestroyedOrderResult, NotEnoughFoodErrorResult, OrderNotFoundErrorResult, ReadOrderResult, SomeFoodsNotFoundErrorResult, UpdatedOrderResult } from "../../result/order.result";
+import { CreatedFoodResult, FoodAlreadyCreatedErrorResult, FoodNotFoundErrorResult, ReadFoodResult, UpdatedFoodResult } from "../../result/food.result";
+import { CreatedOrderResult, InactiveOrderErrorResult, NotEnoughFoodErrorResult, OrderNotFoundErrorResult, ReadOrderResult, SomeFoodsNotFoundErrorResult, UpdatedOrderResult } from "../../result/order.result";
 import { IFactory } from "../common";
 import { InvalidInputErrorResult, IResult, ResultType, UnauthenticatedErrorResult, UnauthorizedErrorResult, UnknownErrorResult } from "../result";
 
@@ -13,17 +13,16 @@ export class ResultFactory implements IFactory<ResultType, IResult> {
         [ResultType.CreatedFood, CreatedFoodResult], 
         [ResultType.ReadFood, ReadFoodResult], 
         [ResultType.UpdatedFood, UpdatedFoodResult], 
-        [ResultType.DestroyedFood, DestroyedFoodResult], 
         [ResultType.FoodNotFound, FoodNotFoundErrorResult], 
         [ResultType.FoodAlreadyCreated, FoodAlreadyCreatedErrorResult], 
 
         [ResultType.CreatedOrder, CreatedOrderResult], 
         [ResultType.ReadOrder, ReadOrderResult], 
         [ResultType.UpdatedOrder, UpdatedOrderResult], 
-        [ResultType.DestroyedOrder, DestroyedOrderResult], 
         [ResultType.OrderNotFound, OrderNotFoundErrorResult], 
         [ResultType.NotEnoughFood, NotEnoughFoodErrorResult], 
         [ResultType.SomeFoodsNotFound, SomeFoodsNotFoundErrorResult], 
+        [ResultType.InactiveOrder, InactiveOrderErrorResult], 
     ]);
 
     public generate(type: ResultType): IResult {

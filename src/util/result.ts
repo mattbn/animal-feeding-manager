@@ -9,17 +9,16 @@ export enum ResultType {
     CreatedFood, 
     ReadFood, 
     UpdatedFood,
-    DestroyedFood, 
     FoodNotFound, 
     FoodAlreadyCreated, 
 
     CreatedOrder, 
     ReadOrder, 
     UpdatedOrder, 
-    DestroyedOrder, 
     OrderNotFound, 
     NotEnoughFood, 
     SomeFoodsNotFound, 
+    InactiveOrder, 
 }
 
 export interface IResult {
@@ -99,17 +98,16 @@ export class HttpResultDecorator extends BaseResult {
         [ResultType.CreatedFood, StatusCodes.CREATED], 
         [ResultType.ReadFood, StatusCodes.OK], 
         [ResultType.UpdatedFood, StatusCodes.OK], 
-        [ResultType.DestroyedFood, StatusCodes.OK], 
         [ResultType.FoodNotFound, StatusCodes.NOT_FOUND], 
         [ResultType.FoodAlreadyCreated, StatusCodes.BAD_REQUEST], 
 
         [ResultType.CreatedOrder, StatusCodes.CREATED], 
         [ResultType.ReadOrder, StatusCodes.OK], 
         [ResultType.UpdatedOrder, StatusCodes.OK], 
-        [ResultType.DestroyedOrder, StatusCodes.OK], 
         [ResultType.OrderNotFound, StatusCodes.NOT_FOUND], 
         [ResultType.NotEnoughFood, StatusCodes.BAD_REQUEST], 
         [ResultType.SomeFoodsNotFound, StatusCodes.NOT_FOUND], 
+        [ResultType.InactiveOrder, StatusCodes.BAD_REQUEST], 
     ]);
     private code: StatusCodes;
 

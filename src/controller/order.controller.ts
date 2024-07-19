@@ -57,15 +57,17 @@ export class OrderController {
     }
 
     public static async read(req: Request, res: Response, next: NextFunction) {
-        // use query parameters
-        let orders = await Order.findAll({ where: req.params, include: {
-            model: Food, 
-            attributes: ['name'], 
-            through: {
-                attributes: ['quantity'], 
-                as: 'details', 
+        let orders = await Order.findAll({
+            where: req.params, 
+            include: {
+                model: Food, 
+                attributes: ['name'], 
+                through: {
+                    attributes: ['quantity'], 
+                    as: 'details', 
+                }
             }
-        }});
+        });
         if(orders && orders.length !== 0) {
             req.result = resultFactory
             .generate(ResultType.ReadOrder)
@@ -83,18 +85,6 @@ export class OrderController {
         if(rows[0] !== 0) {
             req.result = resultFactory
             .generate(ResultType.UpdatedOrder);
-            next();
-        }
-        else {
-            next(ResultType.OrderNotFound);
-        }
-    }
-
-    public static async destroy(req: Request, res: Response, next: NextFunction) {
-        let rows = await Order.destroy({ where: req.params });
-        if(rows !== 0) {
-            req.result = resultFactory
-            .generate(ResultType.DestroyedOrder);
             next();
         }
         else {

@@ -36,35 +36,10 @@ export class FoodController {
     }
 
     public static async update(req: Request, res: Response, next: NextFunction) {
-        if(req.body.foods) {
-            for(let food of req.body.foods) {
-                await Food.update(
-                    filterEntries(food, (x: [string, any]) => x[0] !== 'id'), 
-                    { where: filterEntries(food, (x: [string, any]) => x[0] === 'id') }
-                ); 
-            }
+        let rows = await Food.update(req.body, { where: req.params });
+        if(rows[0] !== 0) {
             req.result = resultFactory
             .generate(ResultType.UpdatedFood);
-            next();
-        }
-        else {
-            let rows = await Food.update(req.body, { where: req.params });
-            if(rows[0] !== 0) {
-                req.result = resultFactory
-                .generate(ResultType.UpdatedFood);
-                next();
-            }
-            else {
-                next(ResultType.FoodNotFound);
-            }
-        }
-    }
-
-    public static async destroy(req: Request, res: Response, next: NextFunction) {
-        let rows = await Food.destroy({ where: req.params });
-        if(rows !== 0) {
-            req.result = resultFactory
-            .generate(ResultType.DestroyedFood);
             next();
         }
         else {
