@@ -40,7 +40,7 @@ export class Food extends BaseModel {
                 unique: true, 
                 validate: {
                     len: [2, 64], 
-                    isAlpha: true, 
+                    is: '[a-zA-Z]+[a-zA-Z\_\s]*[a-zA-Z]+', 
                 }
             }, 
             quantity: {
@@ -58,7 +58,6 @@ export class Food extends BaseModel {
         return {
             sequelize: sequelize, 
             modelName: 'Foods', 
-            paranoid: false, 
         };
     }
 }

@@ -26,8 +26,6 @@ export class OrderFood extends BaseModel {
     public getModelInitOptions(sequelize: Sequelize): InitOptions {
         return {
             sequelize: sequelize, 
-            paranoid: true, 
-            deletedAt: 'deleted_at', 
             modelName: 'OrderFoods', 
         }
     }

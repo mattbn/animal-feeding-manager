@@ -42,7 +42,7 @@ export class Order extends BaseModel {
                 type: DataTypes.STRING, 
                 allowNull: false, 
                 validate: {
-                    isAlphanumeric: true, 
+                    isEmail: true, 
                 }
             }, 
             status: {
@@ -65,8 +65,6 @@ export class Order extends BaseModel {
     public getModelInitOptions(sequelize: Sequelize): InitOptions {
         return {
             sequelize: sequelize, 
-            paranoid: true, 
-            deletedAt: 'deleted_at', 
             modelName: 'Orders', 
         }
     }
