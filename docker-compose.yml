@@ -5,7 +5,6 @@ services:
     build:
       args:
         APP_NAME: ${APP_NAME}
-        ENTRYPOINT: ${API_ENTRYPOINT}
       dockerfile: Dockerfile
     env_file: .env
     depends_on:

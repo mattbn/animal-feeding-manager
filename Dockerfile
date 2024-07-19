@@ -1,8 +1,6 @@
 FROM node:lts-alpine
 ARG APP_NAME
-ARG ENTRYPOINT
-ENV ENTRYPOINT=${ENTRYPOINT}
 WORKDIR /usr/${APP_NAME}
 COPY . .
 RUN npm install
-CMD node ${ENTRYPOINT}
+CMD ["node", "."]
