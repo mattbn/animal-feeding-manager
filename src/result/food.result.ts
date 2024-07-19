@@ -18,12 +18,6 @@ export class UpdatedFoodResult extends BaseResult {
     }
 }
 
-export class DestroyedFoodResult extends BaseResult {
-    public constructor() {
-        super(ResultType.DestroyedFood, 'food destroyed successfully');
-    }
-}
-
 export class FoodNotFoundErrorResult extends BaseResult {
     public constructor() {
         super(ResultType.FoodNotFound, 'no food was found');

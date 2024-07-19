@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { IResult } from "./result";
-import { InitOptions, Model, ModelAttributes, Sequelize } from "sequelize";
+import { InitOptions, Model, ModelAttributes, Sequelize, Transaction } from "sequelize";
 
 export type Awaitable<T> = T | Promise<T>;
 
@@ -48,6 +48,7 @@ declare global {
     namespace Express {
         export interface Request {
             result: IResult;
+            transaction?: Transaction;
         }
     }
 }

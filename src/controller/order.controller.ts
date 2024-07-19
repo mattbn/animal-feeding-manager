@@ -26,7 +26,8 @@ export class OrderController {
                             id: {
                                 [Op.in]: foods.map((x: any) => x.id) 
                             }
-                        }
+                        }, 
+                        transaction: req.transaction ? req.transaction : undefined
                     }));
                     return [
                         results.length !== foods.length, 
@@ -40,9 +41,18 @@ export class OrderController {
                     next(ResultType.NotEnoughFood);
                 }
                 else {
-                    let order = await Order.create(req.body);
+                    let order = await Order.create(
+                        req.body, 
+                        { transaction: req.transaction ? req.transaction : undefined }
+                    );
                     for(let food of foods) {
-                        await order.addFood(food.id, { through: { quantity: food.quantity }});
+                        await order.addFood(
+                            food.id, 
+                            {
+                                through: { quantity: food.quantity }, 
+                                transaction: req.transaction ? req.transaction : undefined
+                            }
+                        );
                     }
                     req.result = resultFactory
                     .generate(ResultType.CreatedOrder)
@@ -66,7 +76,8 @@ export class OrderController {
                     attributes: ['quantity'], 
                     as: 'details', 
                 }
-            }
+            }, 
+            transaction: req.transaction ? req.transaction : undefined
         });
         if(orders && orders.length !== 0) {
             req.result = resultFactory
@@ -81,7 +92,13 @@ export class OrderController {
 
     public static async update(req: Request, res: Response, next: NextFunction) {
         // can update status or msg
-        let rows = await Order.update(req.body, { where: req.params });
+        let rows = await Order.update(
+            req.body, 
+            {
+                where: req.params, 
+                transaction: req.transaction ? req.transaction : undefined
+            }
+        );
         if(rows[0] !== 0) {
             req.result = resultFactory
             .generate(ResultType.UpdatedOrder);

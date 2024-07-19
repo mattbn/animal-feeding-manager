@@ -3,12 +3,14 @@ import { Food } from "../model/food.model";
 import { resultFactory } from "../util/factory/result.factory";
 import { ResultType } from "../util/result";
 import { UniqueConstraintError } from "sequelize";
-import { filterEntries } from "../util/common";
 
 export class FoodController {
     public static async create(req: Request, res: Response, next: NextFunction) {
         try {
-            let food = await Food.create(req.body);
+            let food = await Food.create(
+                req.body, 
+                { transaction: req.transaction ? req.transaction : undefined }
+            );
             req.result = resultFactory
             .generate(ResultType.CreatedFood)
             .setData(food);
@@ -23,7 +25,10 @@ export class FoodController {
     }
 
     public static async read(req: Request, res: Response, next: NextFunction) {
-        let foods = await Food.findAll({ where: req.params });
+        let foods = await Food.findAll({
+            where: req.params, 
+            transaction: req.transaction ? req.transaction : undefined
+        });
         if(foods && foods.length !== 0) {
             req.result = resultFactory
             .generate(ResultType.ReadFood)
@@ -36,7 +41,13 @@ export class FoodController {
     }
 
     public static async update(req: Request, res: Response, next: NextFunction) {
-        let rows = await Food.update(req.body, { where: req.params });
+        let rows = await Food.update(
+            req.body, 
+            {
+                where: req.params, 
+                transaction: req.transaction ? req.transaction : undefined
+            }
+        );
         if(rows[0] !== 0) {
             req.result = resultFactory
             .generate(ResultType.UpdatedFood);
