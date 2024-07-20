@@ -163,10 +163,10 @@ export function prepareFoods(req: Request, res: Response, next: NextFunction) {
  * @param res - Express.js Response object
  * @param next - Express.js NextFunction object
  */
-export function isOrderOwnerOrAdmin(req: Request, res: Response, next: NextFunction) {
+export function isOrderOwnerOrAdminWorker(req: Request, res: Response, next: NextFunction) {
     if(req.result !== undefined && req.caller) {
         let order = req.result.getData() as Order;
-        if(order.owner === req.caller.name || req.caller.role === 'admin') {
+        if(order.owner === req.caller.name || req.caller.role === 'admin' || req.caller.role === 'worker') {
             next();
         }
         else {

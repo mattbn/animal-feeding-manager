@@ -15,7 +15,7 @@ import { OrderFood } from "./model/orderfood.model";
 import { ApiHandler } from "./util/handlers/api.handler";
 import { Event } from "./model/event.model";
 import { EventController } from "./controller/event.controller";
-import { adaptFoods, adaptQueryDateRanges, adaptQueryObjectList, foodsExist, hasDuplicates, isOrderActive, isOrderOwnerOrAdmin, prepareFoods } from "./middleware/order.middleware";
+import { adaptFoods, adaptQueryDateRanges, adaptQueryObjectList, foodsExist, hasDuplicates, isOrderActive, isOrderOwnerOrAdminWorker, prepareFoods } from "./middleware/order.middleware";
 import { NullRequest } from "./util/request";
 import { hasRoles, isAuthenticated } from "./middleware/auth.middleware";
 
@@ -87,7 +87,7 @@ import { hasRoles, isAuthenticated } from "./middleware/auth.middleware";
                     ])
                     .post('/', 
                         isAuthenticated(), [
-                        hasRoles(['user']), 
+                        hasRoles(['user','admin']), 
                         filterRequest(CreateOrderRequest), 
                         hasDuplicates, 
                         adaptFoods, 
@@ -100,13 +100,13 @@ import { hasRoles, isAuthenticated } from "./middleware/auth.middleware";
                         isAuthenticated(), [
                         filterRequest(ReadOrderRequest), 
                         OrderController.read, 
-                        isOrderOwnerOrAdmin, 
+                        isOrderOwnerOrAdminWorker, 
                     ])
                     .get('/:id/info', 
                         isAuthenticated(), [
                         filterRequest(ReadOrderRequest), 
                         OrderController.readEvents, 
-                        isOrderOwnerOrAdmin, 
+                        isOrderOwnerOrAdminWorker, 
                     ])
                     .post('/:id/load', 
                         isAuthenticated(), [
