@@ -4,6 +4,10 @@ import { resultFactory } from "../util/factory/result.factory";
 import { Logger } from "../util/common";
 import { StatusCodes } from "http-status-codes";
 
+/**
+ * Error handler middleware. Builds a result from an error ResultType.
+ * @param logger - Log function that will be called when unexpected errors happen.
+ */
 export function handleError(logger: Logger) {
     return async function(err: any, req: Request, res: Response, next: NextFunction) {
         if(req.transaction !== undefined) {
@@ -24,6 +28,11 @@ export function handleError(logger: Logger) {
     }
 }
 
+/**
+ * Sends the HTTP response back to the caller.
+ * @param req - Express.js Request object
+ * @param res - Express.js Response object
+ */
 export function sendResult(req: Request, res: Response) {
     if(req.result) {
         let result = new HttpResultDecorator(req.result);
@@ -42,6 +51,10 @@ export function sendResult(req: Request, res: Response) {
     }
 }
 
+/**
+ * Packs result middlewares.
+ * @param logger - Log function that will be called when unexpected errors happen.
+ */
 export function result(logger: Logger) {
     return [
         handleError(logger), 

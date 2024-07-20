@@ -1,14 +1,24 @@
 import { Options, Sequelize, SyncOptions, Dialect } from "sequelize";
 import { BaseModel, Logger } from "../common";
 
+/**
+ * Handles sequelize DB connection initialization.
+ */
 export class DatabaseHandler {
     private connection: Sequelize;
     private static instance?: DatabaseHandler;
 
+    /**
+     * Initializes the handler.
+     * @param options - Sequelize options that will be used in initialization
+     */
     private constructor(options: Options) {
         this.connection = new Sequelize(options);
     }
 
+    /**
+     * @returns The Singleton instance.
+     */
     public static getInstance(): DatabaseHandler {
         if(this.instance === undefined) {
             this.instance = new DatabaseHandler({
@@ -32,10 +42,19 @@ export class DatabaseHandler {
         return this.instance;
     }
 
+    /**
+     * @returns Sequelize connection handle
+     */
     public getConnection(): Sequelize {
         return this.connection;
     }
 
+    /**
+     * Initializes the provided models.
+     * @param logger - The logger function that will be used
+     * @param models - The models that will be initialized
+     * @param options - Sequelize synchronization options
+     */
     public async initializeModels(
         logger: Logger, 
         models: typeof BaseModel[], 

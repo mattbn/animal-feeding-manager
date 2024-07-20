@@ -4,6 +4,9 @@ import { Order } from "./order.model";
 import { OrderFood } from "./orderfood.model";
 import { Event } from "./event.model";
 
+/**
+ * Represents a Food.
+ */
 export class Food extends BaseModel {
     declare id: CreationOptional<bigint>;
     declare name: string;
@@ -31,6 +34,9 @@ export class Food extends BaseModel {
     declare countEvents: HasManyCountAssociationsMixin;
     declare createEvents: HasManyCreateAssociationMixin<Event>;
 
+    /**
+     * Performs associations initialization for this model.
+     */
     public associate() {
         Food.belongsToMany(Order, {
             through: OrderFood, 
@@ -41,6 +47,10 @@ export class Food extends BaseModel {
         });
     }
 
+    /**
+     * Gets the model attributes.
+     * @returns Sequelize initialization model attributes
+     */
     public getModelAttributes(): ModelAttributes<Model> {
         return {
             id: {
@@ -72,6 +82,11 @@ export class Food extends BaseModel {
         };
     }
 
+    /**
+     * Gets the model initialization options.
+     * @param sequelize - The database connection
+     * @returns Sequelize model InitOptions
+     */
     public getModelInitOptions(sequelize: Sequelize): InitOptions {
         return {
             sequelize: sequelize, 

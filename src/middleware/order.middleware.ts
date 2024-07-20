@@ -4,6 +4,12 @@ import { Order, OrderStatus } from "../model/order.model";
 import { ResultType } from "../util/result";
 import { resultFactory } from "../util/factory/result.factory";
 
+/**
+ * Translates date ranges in query parameters to a single query parameter.
+ * @param paramName - The name of the output parameter
+ * @param beginName - The name of the range's lower bound date query parameter
+ * @param endName - The name of the range's upper bound date query paramter
+ */
 export function adaptQueryDateRanges(paramName: string, beginName: string, endName: string) {
     return function(req: Request, res: Response, next: NextFunction) {
         let obj: any;
@@ -30,6 +36,12 @@ export function adaptQueryDateRanges(paramName: string, beginName: string, endNa
     }
 }
 
+/**
+ * Applies a map function and translates a list in query parameters to another list parameter
+ * @param paramName - The output list parameter name
+ * @param queryName - The name of the list in query parameters
+ * @param mapFn - The map function that will be applied to the list values
+ */
 export function adaptQueryObjectList(
     paramName: string, 
     queryName: string, 
@@ -53,6 +65,12 @@ export function adaptQueryObjectList(
     }
 }
 
+/**
+ * Checks if the current order is not failed or completed.
+ * @param req - Express.js Request object
+ * @param res - Express.js Response object
+ * @param next - Express.js NextFunction object
+ */
 export function isOrderActive(req: Request, res: Response, next: NextFunction) {
     let invalidStatuses = [OrderStatus.Completed, OrderStatus.Failed];
     if(!req.result || invalidStatuses.includes(req.result.getData().status)) {
@@ -63,6 +81,12 @@ export function isOrderActive(req: Request, res: Response, next: NextFunction) {
     }
 }
 
+/**
+ * Checks if the food list has duplicates.
+ * @param req - Express.js Request object
+ * @param res - Express.js Response object
+ * @param next - Express.js NextFunction object
+ */
 export function hasDuplicates(req: Request, res: Response, next: NextFunction) {
     if(req.body.foods.some((x: any, i: number, self: any[]) => {
         return self.indexOf(self.find((y: any) => x.id === y.id)) !== i;
@@ -74,6 +98,12 @@ export function hasDuplicates(req: Request, res: Response, next: NextFunction) {
     }
 }
 
+/**
+ * Translates a food list to a sequelize where option.
+ * @param req - Express.js Request object
+ * @param res - Express.js Response object
+ * @param next - Express.js NextFunction object
+ */
 export function adaptFoods(req: Request, res: Response, next: NextFunction) {
     (req.params.id as any) = {
         [Op.in]: req.body.foods.map((f: any) => f.id)
@@ -81,6 +111,12 @@ export function adaptFoods(req: Request, res: Response, next: NextFunction) {
     next();
 }
 
+/**
+ * Checks if all current foods exist.
+ * @param req - Express.js Request object
+ * @param res - Express.js Response object
+ * @param next - Express.js NextFunction object
+ */
 export function foodsExist(req: Request, res: Response, next: NextFunction) {
     let foods = req.result.getData();
     if(!(foods instanceof Array)) {
@@ -96,6 +132,12 @@ export function foodsExist(req: Request, res: Response, next: NextFunction) {
     }
 }
 
+/**
+ * Changes food objects shape by adding the current order's required quantity.
+ * @param req - Express.js Request object
+ * @param res - Express.js Response object
+ * @param next - Express.js NextFunction object
+ */
 export function prepareFoods(req: Request, res: Response, next: NextFunction) {
     let foods = req.result.getData();
     if(foods instanceof Array) {
@@ -115,6 +157,12 @@ export function prepareFoods(req: Request, res: Response, next: NextFunction) {
     next();
 }
 
+/**
+ * Checks if the caller is the Order owner or an admin
+ * @param req - Express.js Request object
+ * @param res - Express.js Response object
+ * @param next - Express.js NextFunction object
+ */
 export function isOrderOwnerOrAdmin(req: Request, res: Response, next: NextFunction) {
     if(req.result !== undefined && req.caller) {
         let order = req.result.getData() as Order;

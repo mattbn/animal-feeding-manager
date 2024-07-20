@@ -5,6 +5,12 @@ import { ResultType } from "../util/result";
 import { UniqueConstraintError } from "sequelize";
 
 export class FoodController {
+    /**
+     * Creates a Food in the database.
+     * @param req - Express.js Request object
+     * @param res - Express.js Response object
+     * @param next - Express.js NextFunction object
+     */
     public static async create(req: Request, res: Response, next: NextFunction) {
         try {
             let food = await Food.create(
@@ -26,6 +32,12 @@ export class FoodController {
         }
     }
 
+    /**
+     * Reads a specific Food.
+     * @param req - Express.js Request object
+     * @param res - Express.js Response object
+     * @param next - Express.js NextFunction object
+     */
     public static async read(req: Request, res: Response, next: NextFunction) {
         let foods = await Food.findAll({
             where: req.params, 
@@ -42,6 +54,12 @@ export class FoodController {
         }
     }
 
+    /**
+     * Updates a specific Food.
+     * @param req - Express.js Request object
+     * @param res - Express.js Response object
+     * @param next - Express.js NextFunction object
+     */
     public static async update(req: Request, res: Response, next: NextFunction) {
         req.body.user = req.caller!.name;
         let rows = await Food.update(
@@ -63,6 +81,12 @@ export class FoodController {
         }
     }
 
+    /**
+     * Reads all Events of a specific Food.
+     * @param req - Express.js Request object
+     * @param res - Express.js Response object
+     * @param next - Express.js NextFunction object
+     */
     public static async readEvents(req: Request, res: Response, next: NextFunction) {
         try {
             let options: any = { transaction: req.transaction ? req.transaction : undefined };

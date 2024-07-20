@@ -4,6 +4,9 @@ import { Food } from "./food.model";
 import { OrderFood } from "./orderfood.model";
 import { Event } from "./event.model";
 
+/**
+ * Contains Order statuses.
+ */
 export enum OrderStatus {
     Created, 
     Running, 
@@ -11,11 +14,17 @@ export enum OrderStatus {
     Completed, 
 }
 
+/**
+ * Contains Order error messages.
+ */
 export enum ErrorMessage {
     InvalidLoadedQuantity = 'loaded quantity is too low or too high for some foods', 
     InvalidLoadSequence = 'load sequence was not respected', 
 }
 
+/**
+ * Represents an Order.
+ */
 export class Order extends BaseModel {
     declare id: CreationOptional<bigint>;
     declare owner: string;
@@ -44,6 +53,9 @@ export class Order extends BaseModel {
     declare countEvents: HasManyCountAssociationsMixin;
     declare createEvents: HasManyCreateAssociationMixin<Event>;
 
+    /**
+     * Performs associations initialization for this model.
+     */
     public associate(): void {
         Order.belongsToMany(Food, {
             through: OrderFood, 
@@ -57,6 +69,10 @@ export class Order extends BaseModel {
         });
     }
 
+    /**
+     * Gets the model attributes.
+     * @returns Sequelize initialization model attributes
+     */
     public getModelAttributes(): ModelAttributes<Model> {
         return {
             id: {
@@ -87,6 +103,11 @@ export class Order extends BaseModel {
         };
     }
 
+    /**
+     * Gets the model initialization options.
+     * @param sequelize - The database connection
+     * @returns Sequelize model InitOptions
+     */
     public getModelInitOptions(sequelize: Sequelize): InitOptions {
         return {
             sequelize: sequelize, 

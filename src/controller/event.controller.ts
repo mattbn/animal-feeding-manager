@@ -7,6 +7,12 @@ import { ErrorMessage, Order, OrderStatus } from "../model/order.model";
 const N = parseInt(process.env.N || '0');
 
 export class EventController {
+    /**
+     * Creates an Event used to update some Food.
+     * @param req - Express.js Request object
+     * @param res - Express.js Response object
+     * @param next - Express.js NextFunction object
+     */
     public static async loadFood(req: Request, res: Response, next: NextFunction) {
         let food: Food = req.result.getData();
         req.body.quantity = food.quantity + req.body.quantity;
@@ -28,6 +34,12 @@ export class EventController {
         }
     }
 
+    /**
+     * Creates an Event used to update some Order.
+     * @param req - Express.js Request object
+     * @param res - Express.js Response object
+     * @param next - Express.js NextFunction object
+     */
     public static async loadOrder(req: Request, res: Response, next: NextFunction) {
         let options = { transaction: req.transaction ? req.transaction : undefined };
         let order: Order = req.result.getData();

@@ -3,6 +3,9 @@ import { BaseModel } from "../util/common";
 import { Food } from "./food.model";
 import { Order } from "./order.model";
 
+/**
+ * Represents an Event.
+ */
 export class Event extends BaseModel {
     declare id: CreationOptional<bigint>;
     declare user: string;
@@ -16,6 +19,9 @@ export class Event extends BaseModel {
     declare getOrder: BelongsToGetAssociationMixin<Order>;
     declare setOrder: BelongsToSetAssociationMixin<Order, bigint>;
 
+    /**
+     * Performs associations initialization for this model.
+     */
     public associate(): void {
         Event.belongsTo(Food, { foreignKey: 'food' });
         Event.belongsTo(Order, {
@@ -26,6 +32,10 @@ export class Event extends BaseModel {
         });
     }
 
+    /**
+     * Gets the model attributes.
+     * @returns Sequelize initialization model attributes
+     */
     public getModelAttributes(): ModelAttributes<Model> {
         return {
             id: {
@@ -54,6 +64,11 @@ export class Event extends BaseModel {
         };
     }
 
+    /**
+     * Gets the model initialization options.
+     * @param sequelize - The database connection
+     * @returns Sequelize model InitOptions
+     */
     public getModelInitOptions(sequelize: Sequelize): InitOptions {
         return {
             sequelize: sequelize, 

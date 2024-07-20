@@ -11,10 +11,16 @@ export type Route = {
     router: Router, 
 };
 
+/**
+ * Represents the base interface for Factory types.
+ */
 export interface IFactory<SelectorT, OutputT> {
     generate(type: SelectorT): OutputT;
 }
 
+/**
+ * Represents the base class for all models.
+ */
 export abstract class BaseModel extends Model {
     public abstract getModelAttributes(): ModelAttributes<Model>;
     public abstract getModelInitOptions(sequelize: Sequelize): InitOptions;
@@ -23,6 +29,12 @@ export abstract class BaseModel extends Model {
 
 export type ModelProperties<M extends BaseModel> = Omit<M, keyof BaseModel>;
 
+/**
+ * Applies a function to (number-based) enum values.
+ * @param enumType - The enum type
+ * @param fn - The function that will be called
+ * @returns The result of the function call
+ */
 export function applyEnumFunction(
     enumType: any, 
     fn: (x: number, y: number) => number
@@ -30,13 +42,6 @@ export function applyEnumFunction(
     return Object.values(enumType)
     .filter((x: any) => typeof(x) === 'number')
     .reduce((x: number, y: number) => fn(x, y));
-}
-
-export function filterEntries(obj: any, filter: (x: [string, any]) => boolean) {
-    return Object.fromEntries(
-        Object.entries(obj)
-        .filter(filter)
-    );
 }
 
 declare global {

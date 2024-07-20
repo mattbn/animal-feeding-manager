@@ -6,6 +6,12 @@ import { resultFactory } from "../util/factory/result.factory";
 import { Event } from "../model/event.model";
 
 export class OrderController {
+    /**
+     * Creates an Order in the database.
+     * @param req - Express.js Request object
+     * @param res - Express.js Response object
+     * @param next - Express.js NextFunction object
+     */
     public static async create(req: Request, res: Response, next: NextFunction) {
         try {
             if(req.body.foods.every((f: any) => f.required <= f.food.quantity)) {
@@ -39,6 +45,12 @@ export class OrderController {
         }
     }
 
+    /**
+     * Reads all Orders in the database.
+     * @param req - Express.js Request object
+     * @param res - Express.js Response object
+     * @param next - Express.js NextFunction object
+     */
     public static async readAll(req: Request, res: Response, next: NextFunction) {
         try {
             let orders: any = await Order.findAll({
@@ -69,6 +81,12 @@ export class OrderController {
         }
     }
 
+    /**
+     * Reads a specific Order.
+     * @param req - Express.js Request object
+     * @param res - Express.js Response object
+     * @param next - Express.js NextFunction object
+     */
     public static async read(req: Request, res: Response, next: NextFunction) {
         let orders: any = await Order.findAll({
             where: req.params, 
@@ -96,6 +114,12 @@ export class OrderController {
         }
     }
 
+    /**
+     * Reads all Events of a specific Order.
+     * @param req - Express.js Request object
+     * @param res - Express.js Response object
+     * @param next - Express.js NextFunction object
+     */
     public static async readEvents(req: Request, res: Response, next: NextFunction) {
         try {
             let options: any = {
@@ -148,6 +172,12 @@ export class OrderController {
         }
     }
 
+    /**
+     * Updates a specific Order.
+     * @param req - Express.js Request object
+     * @param res - Express.js Response object
+     * @param next - Express.js NextFunction object
+     */
     public static async update(req: Request, res: Response, next: NextFunction) {
         // can update status or msg
         let rows = await Order.update(

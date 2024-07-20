@@ -1,10 +1,16 @@
 
+/**
+ * Base interface for request parameter validation.
+ */
 export interface IRequest {
     params: any;
     query: any;
     body: any;
 }
 
+/**
+ * Base class for request parameter validation.
+ */
 export class BaseRequest implements IRequest {
     params: any;
     query: any;
@@ -24,6 +30,9 @@ export class BaseRequest implements IRequest {
     }
 }
 
+/**
+ * An empty request.
+ */
 export class NullRequest extends BaseRequest {
     public constructor(params: any, query: any, body: any) {
         super({}, query, {});

@@ -3,6 +3,9 @@ import { CreatedOrderResult, DuplicateFoodsErrorResult, InactiveOrderErrorResult
 import { IFactory } from "../common";
 import { InvalidInputErrorResult, IResult, ResultType, UnauthenticatedErrorResult, UnauthorizedErrorResult, UnknownErrorResult } from "../result";
 
+/**
+ * A factory that generates every possible IResult.
+ */
 export class ResultFactory implements IFactory<ResultType, IResult> {
     private static map: Map<ResultType, any> = new Map([
         [ResultType.Unknown, UnknownErrorResult], 
@@ -29,6 +32,11 @@ export class ResultFactory implements IFactory<ResultType, IResult> {
         [ResultType.ReadFoodEvents, ReadFoodEventsResult], 
     ]);
 
+    /**
+     * Generates a new IResult.
+     * @param type - The type of result that should be generated
+     * @returns An IResult instance
+     */
     public generate(type: ResultType): IResult {
         let result = ResultFactory.map.get(type) || UnknownErrorResult;
         return new result();

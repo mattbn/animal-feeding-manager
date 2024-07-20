@@ -3,6 +3,10 @@ import { Sequelize } from "sequelize";
 import { ResultType } from "../util/result";
 import { BaseRequest } from "../util/request";
 
+/**
+ * Checks if all request parameters are present in the request data, then removes any other parameter
+ * @param requestType - The request type
+ */
 export function filterRequest(requestType: any) {
     return function(req: Request, res: Response, next: NextFunction) {
         let request = new requestType(req.params, req.query, req.body);
@@ -21,6 +25,10 @@ export function filterRequest(requestType: any) {
     }
 }
 
+/**
+ * Begins a transaction in the database.
+ * @param sequelize - The database connection
+ */
 export function beginTransaction(sequelize: Sequelize) {
     return async function(req: Request, res: Response, next: NextFunction) {
         if(req.transaction === undefined) {
@@ -30,6 +38,12 @@ export function beginTransaction(sequelize: Sequelize) {
     }
 }
 
+/**
+ * Performs a commit in the database.
+ * @param req - Express.js Request object
+ * @param res - Express.js Response object
+ * @param next - Express.js NextFunction object
+ */
 export async function endTransaction(req: Request, res: Response, next: NextFunction) {
     if(req.transaction !== undefined) {
         await req.transaction.commit();

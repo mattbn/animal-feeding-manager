@@ -25,10 +25,18 @@ export enum ResultType {
     UpdatedOrder, 
 }
 
+/**
+ * Checks if the provided ResultType is an error.
+ * @param result - The result that will be analyzed
+ * @returns true if result is not an error, false otherwise
+ */
 export function isErrorResult(result: ResultType): boolean {
     return result <= ResultType.Unknown;
 }
 
+/**
+ * Base interface for result generation.
+ */
 export interface IResult {
     getType(): ResultType;
     getMsg(): string | undefined;
@@ -37,6 +45,9 @@ export interface IResult {
     setData(data: any): IResult;
 }
 
+/**
+ * Base class for result generation.
+ */
 export class BaseResult implements IResult {
     private type: ResultType;
     private data: any;
@@ -95,7 +106,9 @@ export class UnauthorizedErrorResult extends BaseResult {
     }
 }
 
-// decorator
+/**
+ * A result decorator which adds HTTP status codes to results.
+ */
 export class HttpResultDecorator extends BaseResult {
     private static map: Map<ResultType, StatusCodes> = new Map([
         [ResultType.Unknown, StatusCodes.INTERNAL_SERVER_ERROR], 
