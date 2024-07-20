@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { Op } from "sequelize";
-import { OrderStatus } from "../model/order.model";
+import { Order, OrderStatus } from "../model/order.model";
 import { ResultType } from "../util/result";
 import { resultFactory } from "../util/factory/result.factory";
 
@@ -9,18 +9,18 @@ export function adaptQueryDateRanges(paramName: string, beginName: string, endNa
         let obj: any;
         if(req.query[beginName] !== undefined && req.query[endName] !== undefined) {
             obj = {
-                [Op.gt]: new Date(req.query[beginName] as string), 
-                [Op.lt]: new Date(req.query[endName] as string), 
+                [Op.gte]: req.query[beginName] as string, 
+                [Op.lte]: req.query[endName] as string, 
             };
             delete req.query[beginName];
             delete req.query[endName];
         }
         else if(req.query[beginName] !== undefined) {
-            obj = { [Op.gt]: new Date(req.query[beginName] as string) };
+            obj = { [Op.gte]: req.query[beginName] as string };
             delete req.query[beginName];
         }
         else if(req.query[endName] !== undefined) {
-            obj = { [Op.lt]: new Date(req.query[endName] as string) };
+            obj = { [Op.lte]: req.query[endName] as string };
             delete req.query[endName];
         }
         if(obj !== undefined) {
@@ -113,4 +113,16 @@ export function prepareFoods(req: Request, res: Response, next: NextFunction) {
         }];
     }
     next();
+}
+
+export function isOrderOwnerOrAdmin(req: Request, res: Response, next: NextFunction) {
+    if(req.result !== undefined && req.caller) {
+        let order = req.result.getData() as Order;
+        if(order.owner === req.caller.name || req.caller.role === 'admin') {
+            next();
+        }
+        else {
+            next(ResultType.Unauthorized);
+        }
+    }
 }

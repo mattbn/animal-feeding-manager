@@ -34,7 +34,6 @@ export class UpdateFoodRequest extends BaseRequest {
             {}, 
             {
                 quantity: body.quantity, 
-                user: body.user, 
             }
         )
     }

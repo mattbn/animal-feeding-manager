@@ -6,7 +6,6 @@ export class CreateOrderRequest extends BaseRequest {
             {}, 
             {}, 
             {
-                owner: body.owner, 
                 foods: body.foods, 
             }
         );
@@ -58,7 +57,6 @@ export class LoadOrderRequest extends BaseRequest {
             {
                 food: body.food, 
                 quantity: body.quantity, 
-                user: body.user, 
             }
         );
     }

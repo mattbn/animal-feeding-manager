@@ -15,8 +15,9 @@ import { OrderFood } from "./model/orderfood.model";
 import { ApiHandler } from "./util/handlers/api.handler";
 import { Event } from "./model/event.model";
 import { EventController } from "./controller/event.controller";
-import { adaptFoods, adaptQueryDateRanges, adaptQueryObjectList, foodsExist, hasDuplicates, isOrderActive, prepareFoods } from "./middleware/order.middleware";
+import { adaptFoods, adaptQueryDateRanges, adaptQueryObjectList, foodsExist, hasDuplicates, isOrderActive, isOrderOwnerOrAdmin, prepareFoods } from "./middleware/order.middleware";
 import { NullRequest } from "./util/request";
+import { hasRoles, isAuthenticated } from "./middleware/auth.middleware";
 
 (async () => {
     let db = DatabaseHandler.getInstance();
@@ -44,20 +45,26 @@ import { NullRequest } from "./util/request";
                         filterRequest(NullRequest), 
                         FoodController.read, 
                     ])
-                    .post('/', [
+                    .post('/', 
+                        isAuthenticated(), [
+                        hasRoles(['worker', 'admin']), 
                         filterRequest(CreateFoodRequest), 
                         FoodController.create, 
                     ])
-                    .get('/:id', [
+                    .get('/:id', 
+                        isAuthenticated(), [
                         filterRequest(ReadFoodRequest), 
                         FoodController.read, 
                     ])
-                    .get('/:id/events', [
+                    .get('/:id/events', 
+                        isAuthenticated(), [
                         filterRequest(ReadFoodRequest), 
                         adaptQueryDateRanges('created_at', 'from', 'to'), 
                         FoodController.readEvents, 
                     ])
-                    .put('/:id', [
+                    .put('/:id', 
+                        isAuthenticated(), [
+                        hasRoles(['worker', 'admin']), 
                         filterRequest(UpdateFoodRequest), 
                         FoodController.read, 
                         EventController.loadFood, 
@@ -78,7 +85,8 @@ import { NullRequest } from "./util/request";
                         adaptQueryDateRanges('updated_at', 'updated_from', 'updated_to'), 
                         OrderController.readAll, 
                     ])
-                    .post('/', [
+                    .post('/', 
+                        isAuthenticated(), [
                         filterRequest(CreateOrderRequest), 
                         hasDuplicates, 
                         adaptFoods, 
@@ -87,15 +95,21 @@ import { NullRequest } from "./util/request";
                         prepareFoods, 
                         OrderController.create, 
                     ])
-                    .get('/:id', [
+                    .get('/:id', 
+                        isAuthenticated(), [
                         filterRequest(ReadOrderRequest), 
                         OrderController.read, 
+                        isOrderOwnerOrAdmin, 
                     ])
-                    .get('/:id/info', [
+                    .get('/:id/info', 
+                        isAuthenticated(), [
                         filterRequest(ReadOrderRequest), 
                         OrderController.readEvents, 
+                        isOrderOwnerOrAdmin, 
                     ])
-                    .post('/:id/load', [
+                    .post('/:id/load', 
+                        isAuthenticated(), [
+                        hasRoles(['worker', 'admin']), 
                         filterRequest(LoadOrderRequest), 
                         OrderController.read, 
                         isOrderActive, 

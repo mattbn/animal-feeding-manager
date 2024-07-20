@@ -3,7 +3,6 @@ import { Food } from "../model/food.model";
 import { resultFactory } from "../util/factory/result.factory";
 import { ResultType } from "../util/result";
 import { UniqueConstraintError } from "sequelize";
-import { Event } from "../model/event.model";
 
 export class FoodController {
     public static async create(req: Request, res: Response, next: NextFunction) {
@@ -44,6 +43,7 @@ export class FoodController {
     }
 
     public static async update(req: Request, res: Response, next: NextFunction) {
+        req.body.user = req.caller!.name;
         let rows = await Food.update(
             req.body, 
             {

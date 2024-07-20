@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import { ResultType } from "../util/result";
 import { ErrorMessage, Order, OrderStatus } from "../model/order.model";
 import { Food } from "../model/food.model";
-import { IncludeOptions, Op } from "sequelize";
 import { resultFactory } from "../util/factory/result.factory";
 import { Event } from "../model/event.model";
 
@@ -10,6 +9,7 @@ export class OrderController {
     public static async create(req: Request, res: Response, next: NextFunction) {
         try {
             if(req.body.foods.every((f: any) => f.required <= f.food.quantity)) {
+                req.body.owner = req.caller!.name;
                 let order = await Order.create(
                     req.body, 
                     {

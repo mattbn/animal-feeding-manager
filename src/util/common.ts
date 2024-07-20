@@ -44,6 +44,7 @@ declare global {
         export interface Request {
             result: IResult;
             transaction?: Transaction;
+            encondedToken: string;
             caller?: { name: string, role: string };
         }
     }

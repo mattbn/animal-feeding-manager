@@ -7,10 +7,25 @@
 	},
 	"item": [
 		{
-			"name": "foods",
+			"name": "authenticated",
 			"item": [
 				{
-					"name": "View ALL foods",
+					"name": "GET index",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}"
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Should fail - no foods available",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -28,13 +43,13 @@
 					"response": []
 				},
 				{
-					"name": "Create ONE food (chicken)",
+					"name": "Should succeed - post one food",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\":\"chicken\",\r\n    \"quantity\":10\r\n}",
+							"raw": "{\r\n    \"name\":\"rice\",\"quantity\":10\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -55,13 +70,13 @@
 					"response": []
 				},
 				{
-					"name": "Create ONE food (beef)",
+					"name": "Should succeed - post one food",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\":\"beef\", \r\n    \"quantity\":5.5\r\n}",
+							"raw": "{\r\n    \"name\":\"chicken\",\"quantity\":12\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -82,13 +97,13 @@
 					"response": []
 				},
 				{
-					"name": "Create ONE food (salmon)",
+					"name": "Should succeed - post one food",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\":\"salmon\",\r\n    \"quantity\":7.5\r\n}",
+							"raw": "{\r\n    \"name\":\"corn\",\"quantity\":6\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -109,13 +124,13 @@
 					"response": []
 				},
 				{
-					"name": "Create ONE food (tuna)",
+					"name": "Should succeed - post one food",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\":\"tuna\"\r\n}",
+							"raw": "{\r\n    \"name\":\"wheat\",\"quantity\":15\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -136,13 +151,13 @@
 					"response": []
 				},
 				{
-					"name": "Create ONE food (corn)",
+					"name": "Should fail - food already inserted",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\":\"corn\"\r\n}",
+							"raw": "{\r\n    \"name\":\"rice\",\"quantity\":15\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -163,19 +178,10 @@
 					"response": []
 				},
 				{
-					"name": "Create ONE food (wheat)",
+					"name": "Should succeed - get foods",
 					"request": {
-						"method": "POST",
+						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"name\":\"wheat\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
 							"raw": "{{HOST}}:{{PORT}}/foods",
 							"host": [
@@ -190,88 +196,7 @@
 					"response": []
 				},
 				{
-					"name": "Create ONE food (soy)",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"name\":\"soy\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{HOST}}:{{PORT}}/foods",
-							"host": [
-								"{{HOST}}"
-							],
-							"port": "{{PORT}}",
-							"path": [
-								"foods"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Create ONE food (rice)",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"name\":\"rice\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{HOST}}:{{PORT}}/foods",
-							"host": [
-								"{{HOST}}"
-							],
-							"port": "{{PORT}}",
-							"path": [
-								"foods"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Create ONE food (egg)",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"name\":\"egg\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{HOST}}:{{PORT}}/foods",
-							"host": [
-								"{{HOST}}"
-							],
-							"port": "{{PORT}}",
-							"path": [
-								"foods"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "View ONE food",
+					"name": "Should succeed - get single food",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -290,13 +215,13 @@
 					"response": []
 				},
 				{
-					"name": "Update chicken quantity",
+					"name": "Should succeed - update food quantity",
 					"request": {
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"quantity\":10\r\n}",
+							"raw": "{\r\n    \"user\":\"test@test.com\", \"quantity\":2\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -318,58 +243,27 @@
 					"response": []
 				},
 				{
-					"name": "Delete ONE food (rice)",
+					"name": "Should succeed - get food with events",
 					"request": {
-						"method": "DELETE",
+						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{HOST}}:{{PORT}}/foods/8",
+							"raw": "{{HOST}}:{{PORT}}/foods/1/events",
 							"host": [
 								"{{HOST}}"
 							],
 							"port": "{{PORT}}",
 							"path": [
 								"foods",
-								"8"
+								"1",
+								"events"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Create ONE food (rice)",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"name\":\"rice\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{HOST}}:{{PORT}}/foods",
-							"host": [
-								"{{HOST}}"
-							],
-							"port": "{{PORT}}",
-							"path": [
-								"foods"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "orders",
-			"item": [
-				{
-					"name": "View ALL orders (empty)",
+					"name": "Should fail - no orders available",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -387,13 +281,13 @@
 					"response": []
 				},
 				{
-					"name": "Create ONE order",
+					"name": "Should succeed - post one order",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"owner\":\"user1\",\r\n    \"foods\":[\r\n        {\r\n            \"id\": 1, \r\n            \"quantity\": 3.5\r\n        }, \r\n        {\r\n            \"id\": 2, \r\n            \"quantity\": 4\r\n        }, \r\n        {\r\n            \"id\": 3, \r\n            \"quantity\": 1.5\r\n        }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"owner\":\"test@test.com\", \"foods\":[{\"id\":1, \"quantity\":5}, {\"id\":2, \"quantity\":4}]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -414,13 +308,13 @@
 					"response": []
 				},
 				{
-					"name": "Create ONE order (again)",
+					"name": "Should succeed - post one order",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"owner\":\"user2\",\r\n    \"foods\":[\r\n        {\r\n            \"id\": 4, \r\n            \"quantity\": 3.5\r\n        }, \r\n        {\r\n            \"id\": 6, \r\n            \"quantity\": 4\r\n        }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"owner\":\"test@test.com\", \"foods\":[{\"id\":1, \"quantity\":5}, {\"id\":3, \"quantity\":4}]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -441,10 +335,19 @@
 					"response": []
 				},
 				{
-					"name": "View ALL orders",
+					"name": "Should succeed - post one order",
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"owner\":\"test@test.com\", \"foods\":[{\"id\":2, \"quantity\":2}, {\"id\":3, \"quantity\":2}]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{HOST}}:{{PORT}}/orders",
 							"host": [
@@ -459,40 +362,314 @@
 					"response": []
 				},
 				{
-					"name": "View ONE order",
+					"name": "Should succeed - post one order",
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"owner\":\"test@test.com\", \"foods\":[{\"id\":3, \"quantity\":2}, {\"id\":4, \"quantity\":2}]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "{{HOST}}:{{PORT}}/orders/1",
+							"raw": "{{HOST}}:{{PORT}}/orders",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Should fail - not enough food",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"owner\":\"test@test.com\", \"foods\":[{\"id\":1, \"quantity\":500}, {\"id\":2, \"quantity\":4}]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/orders",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Should fail - food not found",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"owner\":\"test@test.com\", \"foods\":[{\"id\":10, \"quantity\":4}, {\"id\":4, \"quantity\":1}]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/orders",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Should succeed - load order food",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\":\"worker@test.com\", \"food\": 1, \"quantity\":5.1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/orders/1/load",
 							"host": [
 								"{{HOST}}"
 							],
 							"port": "{{PORT}}",
 							"path": [
 								"orders",
-								"1"
+								"1",
+								"load"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Should succeed - load order food",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\":\"worker@test.com\", \"food\": 2, \"quantity\":3.9\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/orders/1/load",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"orders",
+								"1",
+								"load"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Should fail - invalid loaded quantity",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\":\"worker@test.com\", \"food\": 1, \"quantity\":2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/orders/2/load",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"orders",
+								"2",
+								"load"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Should fail - invalid load sequence",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\":\"worker@test.com\", \"food\": 3, \"quantity\":2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/orders/3/load",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"orders",
+								"3",
+								"load"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Should fail - not enough food",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user\":\"worker@test.com\", \"food\": 3, \"quantity\":100\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/orders/4/load",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"orders",
+								"4",
+								"load"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Should succeed - get order with events",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/orders/1/info",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"orders",
+								"1",
+								"info"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Should fail - not the owner",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoidXNlckB0ZXN0LmNvbSIsICJyb2xlIjoidXNlciIsICJhdWQiOiJhbmltYWwtZmVlZGluZy1tYW5hZ2VyIn0.mqk0jTp0bVpGmTReWxBfzklv6o66pmUpMCnJmK30Eko",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/orders/1/info",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"orders",
+								"1",
+								"info"
 							]
 						}
 					},
 					"response": []
 				}
-			]
-		},
-		{
-			"name": "GET index",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{HOST}}:{{PORT}}",
-					"host": [
-						"{{HOST}}"
-					],
-					"port": "{{PORT}}"
-				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoidGVzdEB0ZXN0LmNvbSIsICJyb2xlIjoid29ya2VyIiwgImF1ZCI6ImFuaW1hbC1mZWVkaW5nLW1hbmFnZXIifQ.mrJS-aBzg-W7U14SGfh4I_b8sygUCDDTK3Bh86k8bh0",
+						"type": "string"
+					}
+				]
 			},
-			"response": []
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
 		}
 	],
 	"event": [

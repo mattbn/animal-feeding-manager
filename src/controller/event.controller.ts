@@ -3,9 +3,6 @@ import { Event } from "../model/event.model";
 import { ResultType } from "../util/result";
 import { Food } from "../model/food.model";
 import { ErrorMessage, Order, OrderStatus } from "../model/order.model";
-import sequelize from "sequelize";
-import { OrderFood } from "../model/orderfood.model";
-import { resultFactory } from "../util/factory/result.factory";
 
 const N = parseInt(process.env.N || '0');
 
@@ -16,7 +13,7 @@ export class EventController {
         try {
             let event = await Event.create(
                 {
-                    user: req.body.user, 
+                    user: req.caller!.name, 
                     quantity: req.body.quantity, 
                     food: food.id, 
                 }, 
@@ -44,7 +41,7 @@ export class EventController {
             }
             else {
                 await Event.create({
-                    user: req.body.user, // req.caller.name
+                    user: req.caller!.name, 
                     order: order.id, 
                     food: req.body.food, 
                     quantity: loaded, 
@@ -96,118 +93,4 @@ export class EventController {
             next(ResultType.Unknown);
         }
     }
-
-    /*
-    private static async isQuantityInRange(order: any, events: any[], food: Food | bigint): Promise<boolean> {
-        if(typeof(food) === 'bigint') {
-            food = (await Food.findByPk(food))!;
-        }
-        let required = order.foods.find((f: any) => f.id === food.id).details.quantity;
-        let loaded =  events.filter((e: any) => e.food === food)
-            .map((x: any) => x.quantity)
-            .reduce((x: number, y: number) => x + y);
-        if(
-            loaded < required - (N/100) * required
-            || loaded > required + (N/100) * required
-        ) {
-            return false;
-        }
-        return true;
-    }
-
-    public static async create(req: Request, res: Response, next: NextFunction) {
-        let options = {
-            transaction: req.transaction ? req.transaction : undefined
-        };
-        if(req.body.food) { // it's an order load
-            let order: Order = req.result.getData();
-            let orderFoods = await order.getFoods({
-                attributes: ['id', 'quantity'], 
-                include: [{
-                    model: Event, 
-                    attributes: ['id', 'quantity'], 
-                }], 
-                order: [['created_at', 'asc']], 
-                transaction: req.transaction ? req.transaction : undefined
-            }); // [ { quantity, { id, quantity, [ id, quantity ] } } ]
-            //          ^required         ^available     ^loaded
-            console.log(JSON.stringify(orderFoods, undefined, 2));
-            let foodInstance = orderFoods.find((x: any) => x.id == req.body.food);
-            if(foodInstance !== undefined) {
-                let event = await Event.create(
-                    {
-                        quantity: req.body.quantity,
-                        user: req.body.user, 
-                        food: req.body.food, 
-                        order: order.id, 
-                    }, 
-                    {
-                        transaction: req.transaction ? req.transaction : undefined
-                    }
-                );
-
-                if(order.status === OrderStatus.Created) {
-                    req.body.status = OrderStatus.Running;
-                }
-                orderFoods = await Promise.all(
-                    orderFoods.map(async (f: Food, i: number) => await f.reload({
-                        transaction: req.transaction ? req.transaction : undefined
-                    }))
-                );
-                console.log(JSON.stringify(orderFoods, undefined, 2));
-                let events: any[] = await order.getEvents({
-                    group: ['food'], 
-                    order: [['created_at', 'desc']], 
-                    attributes: [
-                        'food', 
-                        [sequelize.fn('sum', sequelize.col('quantity')), 'total_quantity']
-                    ], 
-                    transaction: req.transaction ? req.transaction : undefined
-                });
-                if(events.at(0).food != req.body.food && events.at(1).food != req.body.food) {
-                    next(ResultType.InvalidLoadSequence);
-                }
-                else {
-                    // is order completed?
-                    if(events.length === orderFoods.length) {
-                        // are load quantities respected?
-                        let invalidFood: any | undefined;
-                        let invalidQuantity = orderFoods.some((f: any) => {
-                            let loaded = f.Events.map((e: any) => e.quantity)
-                                .reduce((x: number, y: number) => x + y);
-                            let required = f.OrderFoods.quantity;
-                            if(loaded < required - required*(N/100) 
-                                || loaded > required + required*(N/100)
-                            ) {
-                                invalidFood = {
-                                    id: f.id, 
-                                    required: required, 
-                                    loaded: loaded, 
-                                };
-                                return true;
-                            }
-                            return false;
-                        });
-                        if(invalidQuantity) {
-                            req.result = resultFactory
-                            .generate(ResultType.InvalidLoadedQuantity)
-                            .setData(invalidFood);
-                            next(ResultType.InvalidLoadedQuantity);
-                            return;
-                        }
-                        else {
-                            req.body.status = OrderStatus.Completed;
-                        }
-                    }
-                    next();
-                }
-            }
-        }
-        else { // it's a food load
-            let food: Food = req.result.getData();
-            req.body.quantity = food.quantity + req.body.quantity;
-        }
-        next();
-    }
-        */
 }
