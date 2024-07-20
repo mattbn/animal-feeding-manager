@@ -45,6 +45,8 @@ This project has been made using [express](https://expressjs.com/) to manage rou
 |POST `/orders/:id/load`|`admin`,`worker`               |Y                            |
 |GET `/orders/:id/info` |`user`,`admin`,`worker`        |Y                            |
 
+A more detailed version of the route list is accessible [here](./Routes.md).
+
 ### UML diagrams
 
 #### Use case diagram
