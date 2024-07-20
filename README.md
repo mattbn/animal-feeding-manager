@@ -53,6 +53,7 @@ A more detailed version of the route list is accessible [here](./Routes.md).
 ![Use case diagram](./img/usecase.png)
 
 #### Sequence diagrams
+The following is a list of sequence diagram for the most important routes.
 
 ##### POST /foods
 ![Create food](./img/create_food.png)
