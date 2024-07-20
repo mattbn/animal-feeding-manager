@@ -1,74 +1,124 @@
 import dotenv from "dotenv";
 dotenv.config();
-import { ApplicationHandler } from "./util/handlers/application.handler";
-import { json, Request, Response, Router } from "express";
+import { json, NextFunction, Request, Response, Router } from "express";
 import { result } from "./middleware/result.middleware";
 import { FoodController } from "./controller/food.controller";
 import { OrderController } from "./controller/order.controller";
-import { validateQuery } from "./middleware/order.middleware";
-import { CreateFoodRequest, DestroyFoodRequest, ReadFoodRequest, UpdateFoodRequest } from "./request/food.request";
-import { filterRequest } from "./middleware/request.middleware";
-import { CreateOrderRequest, DestroyOrderRequest, ReadOrderRequest, UpdateOrderRequest } from "./request/order.request";
+import { CreateFoodRequest, ReadFoodRequest, UpdateFoodRequest } from "./request/food.request";
+import { beginTransaction, endTransaction, filterRequest } from "./middleware/request.middleware";
+import { CreateOrderRequest, LoadOrderRequest, ReadOrderRequest, UpdateOrderRequest } from "./request/order.request";
 import { StatusCodes } from "http-status-codes";
-import { DatabaseConnection, DatabaseHandler } from "./util/handlers/database.handler";
+import { DatabaseHandler } from "./util/handlers/database.handler";
 import { Food } from "./model/food.model";
 import { Order } from "./model/order.model";
 import { OrderFood } from "./model/orderfood.model";
 import { ApiHandler } from "./util/handlers/api.handler";
+import { Event } from "./model/event.model";
+import { EventController } from "./controller/event.controller";
+import { adaptFoods, adaptQueryDateRanges, adaptQueryObjectList, foodsExist, hasDuplicates, isOrderActive, prepareFoods } from "./middleware/order.middleware";
+import { NullRequest } from "./util/request";
 
 (async () => {
-    let app = new ApplicationHandler()
-        .initialize(
-            (await new DatabaseHandler()
-                .initialize(
-                    new DatabaseConnection('postgres')
-                        .addUsername(process.env.DB_USERNAME || 'postgres')
-                        .addPassword(process.env.DB_PASSWORD || 'password')
-                        .addHost(process.env.DB_HOST || 'localhost')
-                        .addPort(parseInt(process.env.DB_PORT || '5432'))
-                        .addDatabase(process.env.DB_DATABASE || 'postgres')
-                        .addDefine({
-                            paranoid: true, 
-                            deletedAt: 'deleted_at', 
-                            createdAt: 'created_at', 
-                            updatedAt: 'updated_at', 
-                        }).create()
-                        .getConnection()
-                ).initializeModels(
-                    console.log, [
-                        Food, Order, OrderFood, 
-                    ], 
-                    { force: true }
-                )).handler, 
-            new ApiHandler()
-                .initialize(console.log, [{
-                    name: 'foods', 
-                    router: Router()
-                        .use(json())
-                        .get('/', filterRequest(ReadFoodRequest), FoodController.read)
-                        .post('/', filterRequest(CreateFoodRequest), FoodController.create)
-                        .put('/', filterRequest(UpdateFoodRequest), FoodController.update)
-                        .get('/:id', filterRequest(ReadFoodRequest), FoodController.read)
-                        .put('/:id', filterRequest(UpdateFoodRequest), FoodController.update)
-                        .delete('/:id', filterRequest(DestroyFoodRequest), FoodController.destroy)
-                        .use(result(console.log))
-                }, {
-                    name: 'orders', 
-                    router: Router()
-                        .use(json())
-                        .get('/', filterRequest(ReadOrderRequest), validateQuery, OrderController.read)
-                        .post('/', filterRequest(CreateOrderRequest), OrderController.create)
-                        .get('/:id', filterRequest(ReadOrderRequest), OrderController.read)
-                        .put('/:id', filterRequest(UpdateOrderRequest), OrderController.update)
-                        .delete('/:id', filterRequest(DestroyOrderRequest), OrderController.destroy)
-                        .use(result(console.log))
-                }, {
-                    name: '', 
-                    router: Router()
-                        .get('*', (req: Request, res: Response) => {
-                            res.sendStatus(StatusCodes.IM_A_TEAPOT);
-                        })
-                }])
-                .run(parseInt(process.env.API_PORT || '8000'))
+    let db = DatabaseHandler.getInstance();
+    try {
+        await db.initializeModels(
+            console.log, 
+            [Food, Order, OrderFood, Event], 
+            { force: process.env.FORCE_SYNC === 'true' }
         );
+    }
+    catch(err) {
+        console.log(err);
+        process.exit(1);
+    }
+
+    let api = ApiHandler.getInstance();
+    api.initializeRoutes(
+        [
+            {
+                name: 'foods', 
+                router: Router()
+                    .use(json())
+                    .use(beginTransaction(db.getConnection()))
+                    .get('/', [
+                        filterRequest(NullRequest), 
+                        FoodController.read, 
+                    ])
+                    .post('/', [
+                        filterRequest(CreateFoodRequest), 
+                        FoodController.create, 
+                    ])
+                    .get('/:id', [
+                        filterRequest(ReadFoodRequest), 
+                        FoodController.read, 
+                    ])
+                    .get('/:id/events', [
+                        filterRequest(ReadFoodRequest), 
+                        adaptQueryDateRanges('created_at', 'from', 'to'), 
+                        FoodController.readEvents, 
+                    ])
+                    .put('/:id', [
+                        filterRequest(UpdateFoodRequest), 
+                        FoodController.read, 
+                        EventController.loadFood, 
+                        FoodController.update, 
+                    ])
+                    .use(endTransaction)
+                    .use(result(api.getLogger()))
+            }, 
+            {
+                name: 'orders', 
+                router: Router()
+                    .use(json())
+                    .use(beginTransaction(db.getConnection()))
+                    .get('/', [
+                        filterRequest(NullRequest), 
+                        adaptQueryObjectList('id', 'foods', (x: string) => BigInt(x)), 
+                        adaptQueryDateRanges('created_at', 'created_from', 'created_to'), 
+                        adaptQueryDateRanges('updated_at', 'updated_from', 'updated_to'), 
+                        OrderController.readAll, 
+                    ])
+                    .post('/', [
+                        filterRequest(CreateOrderRequest), 
+                        hasDuplicates, 
+                        adaptFoods, 
+                        FoodController.read, 
+                        foodsExist, 
+                        prepareFoods, 
+                        OrderController.create, 
+                    ])
+                    .get('/:id', [
+                        filterRequest(ReadOrderRequest), 
+                        OrderController.read, 
+                    ])
+                    .get('/:id/info', [
+                        filterRequest(ReadOrderRequest), 
+                        OrderController.readEvents, 
+                    ])
+                    .post('/:id/load', [
+                        filterRequest(LoadOrderRequest), 
+                        OrderController.read, 
+                        isOrderActive, 
+                        EventController.loadOrder, 
+                        filterRequest(UpdateOrderRequest), 
+                        OrderController.update, 
+                        FoodController.update, 
+                    ])
+                    .use(endTransaction)
+                    .use(result(api.getLogger()))
+            }, 
+            {
+                name: '', 
+                router: Router()
+                    .get('/healthcheck', (req: Request, res: Response) => {
+                        res.sendStatus(StatusCodes.OK);
+                    })
+                    .all('*', (req: Request, res: Response) => {
+                        res.sendStatus(StatusCodes.IM_A_TEAPOT);
+                    })
+            }
+        ], 
+        console.log, 
+    );
+    api.run(parseInt(process.env.API_PORT || '8000'));
 })();

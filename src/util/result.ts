@@ -1,24 +1,32 @@
 import { StatusCodes } from "http-status-codes";
 
 export enum ResultType {
-    Unknown, 
     InvalidInput, 
     Unauthenticated, 
     Unauthorized, 
-
-    CreatedFood, 
-    ReadFood, 
-    UpdatedFood,
     FoodNotFound, 
     FoodAlreadyCreated, 
-
-    CreatedOrder, 
-    ReadOrder, 
-    UpdatedOrder, 
     OrderNotFound, 
     NotEnoughFood, 
     SomeFoodsNotFound, 
     InactiveOrder, 
+    InvalidLoadedQuantity, 
+    InvalidLoadSequence, 
+    DuplicateFoods, 
+    Unknown, 
+
+    CreatedFood, 
+    ReadFood, 
+    UpdatedFood,
+    ReadFoodEvents, 
+
+    CreatedOrder, 
+    ReadOrder, 
+    UpdatedOrder, 
+}
+
+export function isErrorResult(result: ResultType): boolean {
+    return result <= ResultType.Unknown;
 }
 
 export interface IResult {
@@ -108,6 +116,10 @@ export class HttpResultDecorator extends BaseResult {
         [ResultType.NotEnoughFood, StatusCodes.BAD_REQUEST], 
         [ResultType.SomeFoodsNotFound, StatusCodes.NOT_FOUND], 
         [ResultType.InactiveOrder, StatusCodes.BAD_REQUEST], 
+        [ResultType.InvalidLoadSequence, StatusCodes.BAD_REQUEST], 
+        [ResultType.InvalidLoadedQuantity, StatusCodes.BAD_REQUEST], 
+        [ResultType.DuplicateFoods, StatusCodes.BAD_REQUEST], 
+        [ResultType.ReadFoodEvents, StatusCodes.OK], 
     ]);
     private code: StatusCodes;
 

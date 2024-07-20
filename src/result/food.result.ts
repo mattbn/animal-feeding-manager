@@ -29,3 +29,9 @@ export class FoodAlreadyCreatedErrorResult extends BaseResult {
         super(ResultType.FoodAlreadyCreated, 'food already present');
     }
 }
+
+export class ReadFoodEventsResult extends BaseResult {
+    public constructor() {
+        super(ResultType.ReadFoodEvents);
+    }
+}

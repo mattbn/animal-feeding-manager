@@ -41,6 +41,8 @@ export class UpdateOrderRequest extends BaseRequest {
             {
                 status: body.status, 
                 msg: body.msg, 
+                food: body.food, 
+                quantity: body.quantity, 
             }
         );
     }

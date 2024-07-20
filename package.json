@@ -4,7 +4,7 @@
   "description": "Animal food orders management system",
   "main": "out/api.js",
   "scripts": {
-    "test": "newman run animal-feeding-manager.postman_collection.json > test.result.log"
+    "test": "newman run --verbose animal-feeding-manager.postman_collection.json > test.result.log"
   },
   "repository": {
     "type": "git",

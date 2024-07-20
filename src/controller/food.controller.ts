@@ -3,6 +3,7 @@ import { Food } from "../model/food.model";
 import { resultFactory } from "../util/factory/result.factory";
 import { ResultType } from "../util/result";
 import { UniqueConstraintError } from "sequelize";
+import { Event } from "../model/event.model";
 
 export class FoodController {
     public static async create(req: Request, res: Response, next: NextFunction) {
@@ -20,7 +21,9 @@ export class FoodController {
             if(err instanceof UniqueConstraintError) {
                 next(ResultType.FoodAlreadyCreated);
             }
-            next(ResultType.InvalidInput);
+            else {
+                next(ResultType.InvalidInput);
+            }
         }
     }
 
@@ -49,12 +52,37 @@ export class FoodController {
             }
         );
         if(rows[0] !== 0) {
-            req.result = resultFactory
-            .generate(ResultType.UpdatedFood);
+            if(req.result === undefined || req.result.getType() === ResultType.ReadFood) {
+                req.result = resultFactory
+                .generate(ResultType.UpdatedFood);
+            }
             next();
         }
         else {
             next(ResultType.FoodNotFound);
+        }
+    }
+
+    public static async readEvents(req: Request, res: Response, next: NextFunction) {
+        try {
+            let options: any = { transaction: req.transaction ? req.transaction : undefined };
+            let food = await Food.findByPk(req.params.id, options);
+            if(food) {
+                if(req.params.created_at) {
+                    options.where = { created_at: req.params.created_at };
+                }
+                let events = await food.getEvents(options);
+                req.result = resultFactory
+                .generate(ResultType.ReadFoodEvents)
+                .setData(events);
+                next();
+            }
+            else {
+                next(ResultType.FoodNotFound);
+            }
+        }
+        catch(err) {
+            next(ResultType.Unknown);
         }
     }
 }

@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { Op } from "sequelize";
-import { Order, OrderStatus } from "../model/order.model";
+import { OrderStatus } from "../model/order.model";
 import { ResultType } from "../util/result";
+import { resultFactory } from "../util/factory/result.factory";
 
 export function adaptQueryDateRanges(paramName: string, beginName: string, endName: string) {
     return function(req: Request, res: Response, next: NextFunction) {
@@ -11,21 +12,25 @@ export function adaptQueryDateRanges(paramName: string, beginName: string, endNa
                 [Op.gt]: new Date(req.query[beginName] as string), 
                 [Op.lt]: new Date(req.query[endName] as string), 
             };
+            delete req.query[beginName];
+            delete req.query[endName];
         }
         else if(req.query[beginName] !== undefined) {
             obj = { [Op.gt]: new Date(req.query[beginName] as string) };
+            delete req.query[beginName];
         }
         else if(req.query[endName] !== undefined) {
             obj = { [Op.lt]: new Date(req.query[endName] as string) };
+            delete req.query[endName];
         }
         if(obj !== undefined) {
-            req.params[paramName] = obj;
+            req.query[paramName] = obj;
         }
         next();
     }
 }
 
-export function adaptObjectList(
+export function adaptQueryObjectList(
     paramName: string, 
     queryName: string, 
     mapFn: (x: any) => any
@@ -33,65 +38,20 @@ export function adaptObjectList(
     return function(req: Request, res: Response, next: NextFunction) {
         let obj: any;
         if(req.query[queryName] !== undefined) {
-            obj = req.query[queryName]
-            .toString()
-            .split(',')
-            .map(mapFn);
+            obj = {
+                [Op.in]: req.query[queryName]
+                    .toString()
+                    .split(',')
+                    .map(mapFn)
+            };
         }
         if(obj !== undefined) {
-            req.params[paramName] = obj;
+            delete req.query[queryName];
+            req.query[paramName] = obj;
         }
         next();
     }
 }
-
-/*
-export function validateQuery(req: Request, res: Response, next: NextFunction) {
-    let created_at: any;
-    let updated_at: any;
-    let foods: any;
-    if(req.query.created_from && req.query.created_to) {
-        created_at = {
-            [Op.gt]: new Date(req.query.created_from as string), 
-            [Op.lt]: new Date(req.query.created_to as string)
-        };
-    }
-    else if(req.query.created_from) {
-        created_at = { [Op.gt]: new Date(req.query.created_from as string) };
-    }
-    else if(req.query.created_to) {
-        created_at = { [Op.lt]: new Date(req.query.created_to as string) };
-    }
-    if(req.query.updated_from && req.query.updated_to) {
-        created_at = {
-            [Op.gt]: new Date(req.query.updated_from as string), 
-            [Op.lt]: new Date(req.query.updated_to as string)
-        };
-    }
-    else if(req.query.updated_from) {
-        updated_at = { [Op.gt]: new Date(req.query.updated_from as string) };
-    }
-    else if(req.query.updated_to) {
-        updated_at = { [Op.lt]: new Date(req.query.updated_to as string) };
-    }
-    if(req.query.foods) {
-        foods = req.query.foods
-        .toString()
-        .split(',')
-        .map((x: string) => BigInt(x));
-    }
-    if(created_at !== undefined) {
-        req.params.created_at = created_at;
-    }
-    if(updated_at !== undefined) {
-        req.params.updated_at = updated_at;
-    }
-    if(foods !== undefined) {
-        req.params.foods = foods;
-    }
-    next();
-}
-*/
 
 export function isOrderActive(req: Request, res: Response, next: NextFunction) {
     let invalidStatuses = [OrderStatus.Completed, OrderStatus.Failed];
@@ -101,4 +61,56 @@ export function isOrderActive(req: Request, res: Response, next: NextFunction) {
     else {
         next();
     }
+}
+
+export function hasDuplicates(req: Request, res: Response, next: NextFunction) {
+    if(req.body.foods.some((x: any, i: number, self: any[]) => {
+        return self.indexOf(self.find((y: any) => x.id === y.id)) !== i;
+    })) {
+        next(ResultType.DuplicateFoods);
+    }
+    else {
+        next();
+    }
+}
+
+export function adaptFoods(req: Request, res: Response, next: NextFunction) {
+    (req.params.id as any) = {
+        [Op.in]: req.body.foods.map((f: any) => f.id)
+    };
+    next();
+}
+
+export function foodsExist(req: Request, res: Response, next: NextFunction) {
+    let foods = req.result.getData();
+    if(!(foods instanceof Array)) {
+        foods = [foods];
+    }
+    if(req.body.foods.length !== foods.length) {
+        req.result = resultFactory
+        .generate(ResultType.FoodNotFound);
+        next(ResultType.FoodNotFound);
+    }
+    else {
+        next();
+    }
+}
+
+export function prepareFoods(req: Request, res: Response, next: NextFunction) {
+    let foods = req.result.getData();
+    if(foods instanceof Array) {
+        req.body.foods = req.body.foods.map((x: any) => {
+            return {
+                required: x.quantity, 
+                food: foods.find((y: any) => y.id == x.id)
+            };
+        });
+    }
+    else {
+        req.body.foods = [{
+            required: req.body.foods[0].quantity, 
+            food: foods, 
+        }];
+    }
+    next();
 }

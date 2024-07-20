@@ -1,7 +1,8 @@
-import { BelongsToManyAddAssociationMixin, BelongsToManyAddAssociationsMixin, BelongsToManyCountAssociationsMixin, BelongsToManyCreateAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManyHasAssociationMixin, BelongsToManyHasAssociationsMixin, BelongsToManyRemoveAssociationMixin, BelongsToManyRemoveAssociationsMixin, BelongsToManySetAssociationsMixin, CreationOptional, DataTypes, InitOptions, Model, ModelAttributes, NonAttribute, Sequelize } from "sequelize";
+import { BelongsToManyAddAssociationMixin, BelongsToManyAddAssociationsMixin, BelongsToManyCountAssociationsMixin, BelongsToManyCreateAssociationMixin, BelongsToManyGetAssociationsMixin, BelongsToManyHasAssociationMixin, BelongsToManyHasAssociationsMixin, BelongsToManyRemoveAssociationMixin, BelongsToManyRemoveAssociationsMixin, BelongsToManySetAssociationsMixin, CreationOptional, DataTypes, HasManyAddAssociationMixin, HasManyAddAssociationsMixin, HasManyCountAssociationsMixin, HasManyCreateAssociationMixin, HasManyGetAssociationsMixin, HasManyHasAssociationMixin, HasManyHasAssociationsMixin, HasManyRemoveAssociationMixin, HasManyRemoveAssociationsMixin, HasManySetAssociationsMixin, InitOptions, Model, ModelAttributes, NonAttribute, Sequelize } from "sequelize";
 import { BaseModel } from "../util/common";
 import { Order } from "./order.model";
 import { OrderFood } from "./orderfood.model";
+import { Event } from "./event.model";
 
 export class Food extends BaseModel {
     declare id: CreationOptional<bigint>;
@@ -19,8 +20,25 @@ export class Food extends BaseModel {
     declare countOrderFoods: BelongsToManyCountAssociationsMixin;
     declare createOrderFoods: BelongsToManyCreateAssociationMixin<OrderFood>;
 
+    declare getEvents: HasManyGetAssociationsMixin<Event>;
+    declare addEvent: HasManyAddAssociationMixin<Event, bigint>;
+    declare addEvents: HasManyAddAssociationsMixin<Event, bigint>;
+    declare setEvents: HasManySetAssociationsMixin<Event, bigint>;
+    declare removeEvent: HasManyRemoveAssociationMixin<Event, bigint>;
+    declare removeEvents: HasManyRemoveAssociationsMixin<Event, bigint>;
+    declare hasEvent: HasManyHasAssociationMixin<Event, bigint>;
+    declare hasEvents: HasManyHasAssociationsMixin<Event, bigint>;
+    declare countEvents: HasManyCountAssociationsMixin;
+    declare createEvents: HasManyCreateAssociationMixin<Event>;
+
     public associate() {
-        Food.belongsToMany(Order, { through: OrderFood });
+        Food.belongsToMany(Order, {
+            through: OrderFood, 
+            foreignKey: 'foodId', 
+        });
+        Food.hasMany(Event, {
+            foreignKey: 'food'
+        });
     }
 
     public getModelAttributes(): ModelAttributes<Model> {

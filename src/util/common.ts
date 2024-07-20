@@ -6,11 +6,6 @@ export type Awaitable<T> = T | Promise<T>;
 
 export type Logger = (msg: any) => Awaitable<void>;
 
-export interface IHandler {
-    initialize(...args: any[]): Awaitable<IHandler>;
-    isInitialized(): boolean;
-}
-
 export type Route = {
     name: string, 
     router: Router, 
@@ -49,6 +44,7 @@ declare global {
         export interface Request {
             result: IResult;
             transaction?: Transaction;
+            caller?: { name: string, role: string };
         }
     }
 }

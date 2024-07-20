@@ -1,6 +1,7 @@
-import { Model, ModelOptions, Options, Sequelize, SyncOptions, Dialect } from "sequelize";
-import { BaseModel, IHandler, Logger } from "../common";
+import { Options, Sequelize, SyncOptions, Dialect } from "sequelize";
+import { BaseModel, Logger } from "../common";
 
+/*
 export class DatabaseConnection {
     private connection?: Sequelize;
     private options: Options;
@@ -53,44 +54,57 @@ export class DatabaseConnection {
         return this.connection;
     }
 }
+*/
 
-export class DatabaseHandler implements IHandler {
-    private connection?: Sequelize;
+export class DatabaseHandler {
+    private connection: Sequelize;
+    private static instance?: DatabaseHandler;
 
-    public getConnection(): Sequelize | undefined {
+    private constructor(options: Options) {
+        this.connection = new Sequelize(options);
+    }
+
+    public static getInstance(): DatabaseHandler {
+        if(this.instance === undefined) {
+            this.instance = new DatabaseHandler({
+                dialect: (process.env.DB_DIALECT || 'postgres') as Dialect, 
+                username: process.env.DB_USERNAME || 'postgres', 
+                password: process.env.DB_PASSWORD || 'password', 
+                host: process.env.DB_HOST || 'localhost', 
+                port: parseInt(process.env.DB_PORT || '5432'), 
+                database: process.env.DB_DATABASE || 'postgres', 
+                define: {
+                    createdAt: 'created_at', 
+                    updatedAt: 'updated_at', 
+                    deletedAt: 'deleted_at', 
+                    paranoid: false, 
+                }
+            });
+        }
+        return this.instance;
+    }
+
+    public getConnection(): Sequelize {
         return this.connection;
-    }
-
-    public isInitialized(): boolean {
-        return this.connection !== undefined;
-    }
-
-    public initialize(connection?: Sequelize): DatabaseHandler {
-        this.connection = connection;
-        return this;
     }
 
     public async initializeModels(
         logger: Logger, 
         models: typeof BaseModel[], 
         options?: SyncOptions
-    ): Promise<{ handler: DatabaseHandler, result: boolean }> {
-        let result = false;
-        if(this.isInitialized()) {
-            result = true;
-            Object.values(models).forEach((m: any) => m.init(
-                m.prototype.getModelAttributes(), 
-                m.prototype.getModelInitOptions(this.connection)
-            ));
-            Object.values(models).forEach((m: any) => m.prototype.associate());
-            for(let m of models) {
-                try { await m.sync(options); }
-                catch(err: any) { logger(err); result = false; }
+    ): Promise<void | never> {
+        Object.values(models).forEach((m: any) => m.init(
+            m.prototype.getModelAttributes(), 
+            m.prototype.getModelInitOptions(this.connection)
+        ));
+        Object.values(models).forEach((m: any) => m.prototype.associate());
+        for(let m of models) {
+            try {
+                await m.sync(options);
+            }
+            catch(err: any) {
+                logger(err);
             }
         }
-        return {
-            handler: this, 
-            result: result, 
-        };
     }
 }

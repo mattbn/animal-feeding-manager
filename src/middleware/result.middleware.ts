@@ -1,11 +1,14 @@
 import { NextFunction, Request, Response } from "express";
-import { HttpResultDecorator, ResultType } from "../util/result";
+import { HttpResultDecorator, isErrorResult, ResultType } from "../util/result";
 import { resultFactory } from "../util/factory/result.factory";
 import { Logger } from "../util/common";
 import { StatusCodes } from "http-status-codes";
 
 export function handleError(logger: Logger) {
-    return function(err: any, req: Request, res: Response, next: NextFunction) {
+    return async function(err: any, req: Request, res: Response, next: NextFunction) {
+        if(req.transaction !== undefined) {
+            await req.transaction.rollback();
+        }
         let type: ResultType = ResultType.Unknown;
         if(err in ResultType) {
             type = err;
@@ -13,8 +16,10 @@ export function handleError(logger: Logger) {
         else {
             logger(err);
         }
-        req.result = resultFactory
-        .generate(type);
+        if(req.result === undefined || !isErrorResult(req.result.getType())) {
+            req.result = resultFactory
+            .generate(type);
+        }
         next();
     }
 }

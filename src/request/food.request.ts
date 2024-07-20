@@ -33,21 +33,6 @@ export class UpdateFoodRequest extends BaseRequest {
             }, 
             {}, 
             {
-                name: body.name, 
-                quantity: body.quantity, 
-            }
-        );
-    }
-}
-
-export class LoadFoodRequest extends BaseRequest {
-    public constructor(params: any, query: any, body: any) {
-        super(
-            {
-                id: params.id, 
-            }, 
-            {}, 
-            {
                 quantity: body.quantity, 
                 user: body.user, 
             }

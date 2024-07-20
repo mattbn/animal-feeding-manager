@@ -41,3 +41,21 @@ export class InactiveOrderErrorResult extends BaseResult {
         super(ResultType.InactiveOrder, 'order is completed or failed');
     }
 }
+
+export class InvalidLoadedQuantityErrorResult extends BaseResult {
+    public constructor() {
+        super(ResultType.InvalidLoadedQuantity, 'total food loaded quantity is too low or too high');
+    }
+}
+
+export class InvalidLoadSequenceErrorResult extends BaseResult {
+    public constructor() {
+        super(ResultType.InvalidLoadSequence, 'load sequence was not respected');
+    }
+}
+
+export class DuplicateFoodsErrorResult extends BaseResult {
+    public constructor() {
+        super(ResultType.DuplicateFoods, 'food list contains duplicates');
+    }
+}
