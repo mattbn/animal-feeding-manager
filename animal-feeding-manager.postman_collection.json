@@ -45,6 +45,16 @@
 				{
 					"name": "Should succeed - post one food",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoid29ya2VyMkB0ZXN0LmNvbSIsInJvbGUiOiJ3b3JrZXIiLCJhdWQiOiJhbmltYWwtZmVlZGluZy1tYW5hZ2VyIiwiaWF0IjoxNzIxNDk4NzY2fQ.4X7teAwtV50yIT6jK2FiW6WHVck3wVEzmj-8MM6CWFM",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -72,6 +82,16 @@
 				{
 					"name": "Should succeed - post one food",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoid29ya2VyMkB0ZXN0LmNvbSIsInJvbGUiOiJ3b3JrZXIiLCJhdWQiOiJhbmltYWwtZmVlZGluZy1tYW5hZ2VyIiwiaWF0IjoxNzIxNDk4NzY2fQ.4X7teAwtV50yIT6jK2FiW6WHVck3wVEzmj-8MM6CWFM",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -99,6 +119,16 @@
 				{
 					"name": "Should succeed - post one food",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoid29ya2VyMkB0ZXN0LmNvbSIsInJvbGUiOiJ3b3JrZXIiLCJhdWQiOiJhbmltYWwtZmVlZGluZy1tYW5hZ2VyIiwiaWF0IjoxNzIxNDk4NzY2fQ.4X7teAwtV50yIT6jK2FiW6WHVck3wVEzmj-8MM6CWFM",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -126,6 +156,16 @@
 				{
 					"name": "Should succeed - post one food",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoid29ya2VyMkB0ZXN0LmNvbSIsInJvbGUiOiJ3b3JrZXIiLCJhdWQiOiJhbmltYWwtZmVlZGluZy1tYW5hZ2VyIiwiaWF0IjoxNzIxNDk4NzY2fQ.4X7teAwtV50yIT6jK2FiW6WHVck3wVEzmj-8MM6CWFM",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -153,6 +193,16 @@
 				{
 					"name": "Should fail - food already inserted",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoid29ya2VyMkB0ZXN0LmNvbSIsInJvbGUiOiJ3b3JrZXIiLCJhdWQiOiJhbmltYWwtZmVlZGluZy1tYW5hZ2VyIiwiaWF0IjoxNzIxNDk4NzY2fQ.4X7teAwtV50yIT6jK2FiW6WHVck3wVEzmj-8MM6CWFM",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -217,6 +267,16 @@
 				{
 					"name": "Should succeed - update food quantity",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoid29ya2VyMkB0ZXN0LmNvbSIsInJvbGUiOiJ3b3JrZXIiLCJhdWQiOiJhbmltYWwtZmVlZGluZy1tYW5hZ2VyIiwiaWF0IjoxNzIxNDk4NzY2fQ.4X7teAwtV50yIT6jK2FiW6WHVck3wVEzmj-8MM6CWFM",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PUT",
 						"header": [],
 						"body": {
@@ -287,7 +347,44 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"owner\":\"test@test.com\", \"foods\":[{\"id\":1, \"quantity\":5}, {\"id\":2, \"quantity\":4}]\r\n}",
+							"raw": "{\r\n    \"foods\":[{\"id\":1, \"quantity\":5}, {\"id\":2, \"quantity\":4}]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}:{{PORT}}/orders",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Should succeed - post one order",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidXNlcjJAdGVzdC5jb20iLCJyb2xlIjoidXNlciIsImF1ZCI6ImFuaW1hbC1mZWVkaW5nLW1hbmFnZXIiLCJpYXQiOjE3MjE0OTg1OTh9.vzTJnO0H4KppNZyMiwEBoAMAF2VIsHirzyGfUwJFoOg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"foods\":[{\"id\":1, \"quantity\":5}, {\"id\":3, \"quantity\":4}]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -314,7 +411,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"owner\":\"test@test.com\", \"foods\":[{\"id\":1, \"quantity\":5}, {\"id\":3, \"quantity\":4}]\r\n}",
+							"raw": "{\r\n    \"foods\":[{\"id\":2, \"quantity\":2}, {\"id\":3, \"quantity\":2}]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -341,34 +438,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"owner\":\"test@test.com\", \"foods\":[{\"id\":2, \"quantity\":2}, {\"id\":3, \"quantity\":2}]\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{HOST}}:{{PORT}}/orders",
-							"host": [
-								"{{HOST}}"
-							],
-							"port": "{{PORT}}",
-							"path": [
-								"orders"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Should succeed - post one order",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"owner\":\"test@test.com\", \"foods\":[{\"id\":3, \"quantity\":2}, {\"id\":4, \"quantity\":2}]\r\n}",
+							"raw": "{\r\n    \"foods\":[{\"id\":3, \"quantity\":2}, {\"id\":4, \"quantity\":2}]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -395,7 +465,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"owner\":\"test@test.com\", \"foods\":[{\"id\":1, \"quantity\":500}, {\"id\":2, \"quantity\":4}]\r\n}",
+							"raw": "{\r\n    \"foods\":[{\"id\":1, \"quantity\":500}, {\"id\":2, \"quantity\":4}]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -422,7 +492,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"owner\":\"test@test.com\", \"foods\":[{\"id\":10, \"quantity\":4}, {\"id\":4, \"quantity\":1}]\r\n}",
+							"raw": "{\r\n    \"foods\":[{\"id\":10, \"quantity\":4}, {\"id\":4, \"quantity\":1}]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -445,11 +515,21 @@
 				{
 					"name": "Should succeed - load order food",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoid29ya2VyMUB0ZXN0LmNvbSIsInJvbGUiOiJ3b3JrZXIiLCJhdWQiOiJhbmltYWwtZmVlZGluZy1tYW5hZ2VyIiwiaWF0IjoxNzIxNDk4NzQwfQ.LUl2dSDyPZ4DAZ1GEpUxd59VI-v5bVzLDjUepHHQOyI",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"user\":\"worker@test.com\", \"food\": 1, \"quantity\":5.1\r\n}",
+							"raw": "{\r\n    \"food\": 1, \"quantity\":5.1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -474,11 +554,21 @@
 				{
 					"name": "Should succeed - load order food",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoid29ya2VyMkB0ZXN0LmNvbSIsInJvbGUiOiJ3b3JrZXIiLCJhdWQiOiJhbmltYWwtZmVlZGluZy1tYW5hZ2VyIiwiaWF0IjoxNzIxNDk4NzY2fQ.4X7teAwtV50yIT6jK2FiW6WHVck3wVEzmj-8MM6CWFM",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"user\":\"worker@test.com\", \"food\": 2, \"quantity\":3.9\r\n}",
+							"raw": "{\r\n    \"food\": 2, \"quantity\":3.9\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -503,11 +593,21 @@
 				{
 					"name": "Should fail - invalid loaded quantity",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoid29ya2VyMkB0ZXN0LmNvbSIsInJvbGUiOiJ3b3JrZXIiLCJhdWQiOiJhbmltYWwtZmVlZGluZy1tYW5hZ2VyIiwiaWF0IjoxNzIxNDk4NzY2fQ.4X7teAwtV50yIT6jK2FiW6WHVck3wVEzmj-8MM6CWFM",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"user\":\"worker@test.com\", \"food\": 1, \"quantity\":2\r\n}",
+							"raw": "{\r\n    \"food\": 1, \"quantity\":2\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -532,11 +632,21 @@
 				{
 					"name": "Should fail - invalid load sequence",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoid29ya2VyMkB0ZXN0LmNvbSIsInJvbGUiOiJ3b3JrZXIiLCJhdWQiOiJhbmltYWwtZmVlZGluZy1tYW5hZ2VyIiwiaWF0IjoxNzIxNDk4NzY2fQ.4X7teAwtV50yIT6jK2FiW6WHVck3wVEzmj-8MM6CWFM",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"user\":\"worker@test.com\", \"food\": 3, \"quantity\":2\r\n}",
+							"raw": "{\r\n    \"food\": 3, \"quantity\":2\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -561,11 +671,21 @@
 				{
 					"name": "Should fail - not enough food",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoid29ya2VyMkB0ZXN0LmNvbSIsInJvbGUiOiJ3b3JrZXIiLCJhdWQiOiJhbmltYWwtZmVlZGluZy1tYW5hZ2VyIiwiaWF0IjoxNzIxNDk4NzY2fQ.4X7teAwtV50yIT6jK2FiW6WHVck3wVEzmj-8MM6CWFM",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"user\":\"worker@test.com\", \"food\": 3, \"quantity\":100\r\n}",
+							"raw": "{\r\n    \"food\": 3, \"quantity\":100\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -615,7 +735,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoidXNlckB0ZXN0LmNvbSIsICJyb2xlIjoidXNlciIsICJhdWQiOiJhbmltYWwtZmVlZGluZy1tYW5hZ2VyIn0.mqk0jTp0bVpGmTReWxBfzklv6o66pmUpMCnJmK30Eko",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidXNlcjJAdGVzdC5jb20iLCJyb2xlIjoidXNlciIsImF1ZCI6ImFuaW1hbC1mZWVkaW5nLW1hbmFnZXIiLCJpYXQiOjE3MjE0OTg1OTh9.vzTJnO0H4KppNZyMiwEBoAMAF2VIsHirzyGfUwJFoOg",
 									"type": "string"
 								}
 							]
@@ -643,7 +763,7 @@
 				"bearer": [
 					{
 						"key": "token",
-						"value": "eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoidGVzdEB0ZXN0LmNvbSIsICJyb2xlIjoid29ya2VyIiwgImF1ZCI6ImFuaW1hbC1mZWVkaW5nLW1hbmFnZXIifQ.mrJS-aBzg-W7U14SGfh4I_b8sygUCDDTK3Bh86k8bh0",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidXNlckB0ZXN0LmNvbSIsInJvbGUiOiJ1c2VyIiwiYXVkIjoiYW5pbWFsLWZlZWRpbmctbWFuYWdlciIsImlhdCI6MTcyMTQ5ODUzNH0.re150SgMcb_YEDhaKVU_kDWPMBR7iJHPykkZGZ9wWfk",
 						"type": "string"
 					}
 				]
