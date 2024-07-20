@@ -51,6 +51,7 @@ This project has been made using [express](https://expressjs.com/) to manage rou
 ![Use case diagram](./img/usecase.png)
 
 #### Sequence diagrams
+The following is a list of sequence diagram for the most important routes.
 
 ##### POST /foods
 ![Create food](./img/create_food.png)
