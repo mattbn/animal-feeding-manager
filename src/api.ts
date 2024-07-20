@@ -87,6 +87,7 @@ import { hasRoles, isAuthenticated } from "./middleware/auth.middleware";
                     ])
                     .post('/', 
                         isAuthenticated(), [
+                        hasRoles(['user']), 
                         filterRequest(CreateOrderRequest), 
                         hasDuplicates, 
                         adaptFoods, 

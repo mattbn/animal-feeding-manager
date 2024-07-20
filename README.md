@@ -29,6 +29,18 @@ An authenticated user can perform various actions, such as:
 ## Design
 ### UML diagrams
 
+#### Use case diagram
+
+#### Sequence diagrams
+
+##### POST /foods
+
+##### PUT /foods/:id
+
+##### POST /orders
+
+##### POST /orders/:id/load
+
 ### Patterns
 
 ## Test
