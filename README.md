@@ -16,6 +16,8 @@ An authenticated user can perform various actions, such as:
 	- Differences between required and loaded food quantities.
 	- Total time (in microseconds) used to perform all loads relative to a specific order.
 
+This project has been made using [express](https://expressjs.com/) to manage routes and [sequelize](https://sequelize.org/) to handle database connection.
+
 ## Usage
 
 - Ensure [docker](https://www.docker.com/), [docker-compose](https://docs.docker.com/compose/), [node.js](https://nodejs.org/en) and [typescript](https://www.typescriptlang.org/) are installed.
@@ -30,16 +32,21 @@ An authenticated user can perform various actions, such as:
 ### UML diagrams
 
 #### Use case diagram
+![Use case diagram](./img/usecase.png)
 
 #### Sequence diagrams
 
 ##### POST /foods
+![Create food](./img/create_food.png)
 
 ##### PUT /foods/:id
+![Load food](./img/load_food.png)
 
 ##### POST /orders
+![Create order](./img/create_order.png)
 
 ##### POST /orders/:id/load
+![Load order](./img/load_order.png)
 
 ### Patterns
 
