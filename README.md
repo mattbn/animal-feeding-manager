@@ -97,6 +97,6 @@ Decorator is a type of pattern which can be used to add extra functionality to s
 
 ## Test
 
-A [Postman]() collection is included in the repository to test the application once it's running.
-You can run the tests by installing [newman]() and by entering: `npm run test` or `newman run --verbose animal-feeding-manager.postman_collection.json` in a terminal inside the project folder.
+A [Postman](https://www.postman.com/) collection is included in the repository to test the application once it's running.
+You can run the tests by installing [newman](https://learning.postman.com/docs/collections/using-newman-cli/installing-running-newman/) and by entering: `npm run test` or `newman run --verbose animal-feeding-manager.postman_collection.json` in a terminal inside the project folder.
 Ensure the collection's environment variables match the ones defined in the `.env` file to be able to connect to the service.
